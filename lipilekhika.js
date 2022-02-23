@@ -4,8 +4,8 @@ class लिपिलेखिकासहायक {
         this.akSharAH = {
             "Normal": {}
         };
-        this.sanchit = "https://cdn.jsdelivr.net/gh/ofsfobnelip/lipi@latest/src/dattAMsh";
         this.k = null;
+        this.sanchit = "https://cdn.jsdelivr.net/gh/ofsfobnelip/lipi@latest/src/dattAMsh";
         this.font_loca = this.substring(this.sanchit, 0, -8) + "fonts";
         this.image_loca = this.substring(this.sanchit, 0, -12) + "img/lang";
         this.alph = ["ABCDEFGHIJKLMNOPQRSTUVWXYZ", "abcdefghijklmnopqrstuvwxyz"];
@@ -39,8 +39,16 @@ class लिपिलेखिकासहायक {
             });
         } else if (callback != null)
             callback();
+        return new Promise(r => r("loaded"));
     } in (val, in_what) {
         return val.indexOf(in_what) != -1;
+    }
+    reg_index(str, pattern) {
+        let ind = [],
+            mtch = 0;
+        while ((mtch = pattern.exec(str)) != null)
+            ind.push(mtch.index);
+        return ind;
     }
     is_lower(b) {
         return this.in(this.alph[1], b);
@@ -850,19 +858,23 @@ class लिपिलेखिकापरिवर्तक {
             }
         };
         let tamil_ex = (v1, type) => { // Preparing text for conversions in Tamil Extended
-            let x1 = type == "to" ? 2 : 1,
+            let mtr = "ாிீுூெேைொோௌ்", // all matras and halant
+                num = ["²³⁴", "₂₃₄"],
+                reg = type == "to" ? `[க-ஹ][${num[0]}][${mtr}]` : `[க-ஹ][${mtr}][${num[0]+num[1]}]`,
                 x2 = type == "to" ? 1 : 2,
                 d1 = type == "to" ? db2 : db;
             let r1 = v1.split("");
-            for (let x = 0; x < v1.length - 2; x++) {
-                if (v1[x] in d1 && v1[x + 1] in d1 && v1[x + 2] in d1) {
-                    let k = [v1[x], v1[x + 1], v1[x + 2]];
-                    let k1 = [d1[k[0]], d1[k[1]], d1[k[2]]];
-                    if ((k1[x1][1] == 0 || k[x1] == hal[type]) && k1[0].length > 2)
-                        if (l.in(k1[0][2], k[x2]) && l.in("²³⁴₂₃₄", k[x2])) {
-                            r1[x + 1] = k[2];
-                            r1[x + 2] = k[1];
-                        }
+            for (let x of l.reg_index(v1, new RegExp(reg, "gm"))) {
+                let k = d1[r1[x]],
+                    k1 = r1[x + x2];
+                if (k.length > 2) {
+                    if (l.in(num[1], k1))
+                        k1 = (r1[x + x2] = num[0][num[1].indexOf(k1)]);
+                    if (l.in(k[2], k1)) {
+                        let tmp = r1[x + 1];
+                        r1[x + 1] = r1[x + 2];
+                        r1[x + 2] = tmp;
+                    }
                 }
             }
             return r1.join("");
