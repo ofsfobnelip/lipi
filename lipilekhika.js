@@ -47,7 +47,7 @@ class लिपिलेखिकासहायक {
         let ind = [],
             mtch = 0;
         while ((mtch = pattern.exec(str)) != null)
-            ind.push(mtch.index);
+            ind.push([mtch.index, mtch[0]]);
         return ind;
     }
     is_lower(b) {
@@ -715,9 +715,6 @@ class लिपिलेखिकापरिवर्तक {
         if (from == to)
             return val;
         var l = लिपि;
-        for (let x of [from, to])
-            if (!l.lang_in(x))
-                l.load_lang(x, null, true);
         var convert = (ln, t) => this.prakriyA({
             lang: ln,
             text: t
@@ -746,7 +743,6 @@ class लिपिलेखिकापरिवर्तक {
             res = "",
             next = "",
             chr = "";
-
         var get_hal = (d) => {
             if (!l.in(["Normal", "Romanized", "Urdu"], d))
                 return l.akSharAH[d]["."][".x"][0];
@@ -835,7 +831,7 @@ class लिपिलेखिकापरिवर्तक {
                 done = true;
             }
             if (!continued && l.in(["Normal", "Romanized", "Urdu"], to) &&
-                (pUrva[0][2] == 1 && sthiti != 0 && !l.in([hal.from, nukta.from], x))) // condition if vyanjana is not follwed by svar matra
+                (l.in([1, 3], pUrva[0][2]) && sthiti != 0 && !l.in([hal.from, nukta.from], x))) // condition if vyanjana is not follwed by svar matra
                 res += "a";
             if (!last && !done) {
                 res += x;
@@ -860,15 +856,18 @@ class लिपिलेखिकापरिवर्तक {
         let tamil_ex = (v1, type) => { // Preparing text for conversions in Tamil Extended
             let mtr = "ாிீுூெேைொோௌ்", // all matras and halant
                 num = ["²³⁴", "₂₃₄"],
-                reg = type == "to" ? `[க-ஹ][${num[0]}][${mtr}]` : `[க-ஹ][${mtr}][${num[0]+num[1]}]`,
+                sva_anu = "॒॑᳚᳛", // anudAttA followed by three svarits
+                tml = "கசஜடதப",
+                reg = type == "to" ? `[${tml}][${num[0]}][${mtr}]` : `[${tml}][${mtr}][${num[0]+num[1]}]`,
                 x2 = type == "to" ? 1 : 2,
                 d1 = type == "to" ? db2 : db;
             let r1 = v1.split("");
-            for (let x of l.reg_index(v1, new RegExp(reg, "gm"))) {
-                let k = d1[r1[x]],
-                    k1 = r1[x + x2];
+            for (let x1 of l.reg_index(v1, new RegExp(reg, "gm"))) {
+                let x = x1[0],
+                    k = d1[r1[x]];
                 if (k.length > 2) {
-                    if (l.in(num[1], k1))
+                    let k1 = r1[x + x2];
+                    if (l.in(num[1], k1)) // if subscript nums then make it superscript
                         k1 = (r1[x + x2] = num[0][num[1].indexOf(k1)]);
                     if (l.in(k[2], k1)) {
                         let tmp = r1[x + 1];
