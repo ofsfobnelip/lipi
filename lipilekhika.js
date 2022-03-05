@@ -59,11 +59,9 @@ class लिपिलेखिकासहायक {
     is_upper(b) {
         return this.in(this.alph[0], b);
     }
-
     to_lower(b) {
         return this.alph[1][this.alph[0].indexOf(b)];
     }
-
     to_upper(b) {
         return this.alph[0][this.alph[1].indexOf(b)];
     }
@@ -1011,7 +1009,7 @@ class लिपिलेखिकालेखनसहायिका {
         let row1 = "",
             row2 = "";
         row1 += `<td><span></span><span></span></td>`;
-        row2 += `<td><a rel="noopener" href="https://www.lipilekhika.com" target="_blank"><span></span></a></td>`;
+        row2 += `<td><a rel="noopener" href="https://rebrand.ly/lekhika" target="_blank"><span></span></a></td>`;
         row1 += `<td></td>`;
         row2 += `<td></td>`;
         for (let x = 0; x <= 60; x++) {
