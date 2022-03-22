@@ -1055,8 +1055,8 @@ class लिपिलेखिकालेखनसहायिका {
         this.ins_button = [$(img[1]), $(img[0]), 0, 0];
         this.ins_sthiti = 1;
         this.ins_button[this.ins_sthiti].show();
-        this.ins_button[0].click(() => this.change_ins(0));
-        this.ins_button[1].click(() => this.change_ins(1));
+        this.ins_button[0].on("click", () => this.change_ins(0));
+        this.ins_button[1].on("click", () => this.change_ins(1));
         if (this.ins_sthiti == 1)
             this.bhaNDAra.sahayika.style.display = "none";
         $(tbody[1]).css({
@@ -1119,7 +1119,7 @@ class लिपिलेखिकालेखनसहायिका {
         this.ins_msg = "";
         this.set_lang("English");
         this.abhisthAnam = 0;
-        $("body").click((event) => {
+        $("body").on("click", (event) => {
             let obj = LipiLekhikA;
             let o = this;
             let bh = o.bhaNDAra;
@@ -1133,6 +1133,8 @@ class लिपिलेखिकालेखनसहायिका {
                 // above -> checking if a varna has been clicked
                 sah = true;
                 let el = o.adhar;
+                if (trgt.value == undefined)
+                    return;
                 for (let x of trgt.value) {
                     if (this.k.in(["input", "textarea"], el[0].tagName.toLowerCase())) {
                         obj.from_click = true;
@@ -1149,13 +1151,6 @@ class लिपिलेखिकालेखनसहायिका {
             }
             if (!sah)
                 obj.clear_all_val(true);
-        });
-        $("body").dblclick(() => {
-            let obj = LipiLekhikA;
-            let o = this;
-            if (o.elm[0].style.display == "none")
-                return;
-            obj.clear_all_val(true);
         });
         let n = ":hover{color:blue;}",
             l = ".लिপি",
