@@ -1039,7 +1039,7 @@ class लिपिलेखिकालेखनसहायिका {
                 });
                 to_css(`#${id} table`, {
                     "display": "block",
-                    "max-width": "250px",
+                    "max-width": "210px",
                 });
                 to_css(`#${id} table::-webkit-scrollbar`, {
                     height: "5px"
@@ -1190,7 +1190,7 @@ class लिपिलेखिकालेखनसहायिका {
     check_width() {
         let w = parseInt(this.k.substring(this.elm.css("width"), 0, -2)),
             elm = this.bhaNDAra.table;
-        if (w >= 250)
+        if (w >= 210)
             elm.css("overflow-x", "scroll");
         else
             elm.css("overflow-x", "");
