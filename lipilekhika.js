@@ -1037,6 +1037,25 @@ class लिपिलेखिकालेखनसहायिका {
                     "font-family": `"Nirmala UI","Calibri"`,
                     "transition-duration": "500ms"
                 });
+                to_css(`#${id} table`, {
+                    "display": "block",
+                    "max-width": "250px",
+                });
+                to_css(`#${id} table::-webkit-scrollbar`, {
+                    height: "5px"
+                })
+                to_css(`#${id} table::-webkit-scrollbar-track`, {
+                    background: "#f1f1f1",
+                    "border-radius": "10px"
+                })
+                to_css(`#${id} table::-webkit-scrollbar-thumb`, {
+                    background: "#888",
+                    "border-radius": "10px",
+                    height: "2px"
+                })
+                to_css(`#${id} table::-webkit-scrollbar-thumb:hover`, {
+                    background: "#555"
+                })
                 let e = `#${id} table tbody tr`; // defined for reusing
                 to_css(`${e}:nth-child(2) td:nth-child(1) span`, {
                     "cursor": "pointer",
@@ -1103,7 +1122,8 @@ class लिपिलेखिकालेखनसहायिका {
                     "key2": 0,
                     "pashchAta": 0,
                     "akShara": 0,
-                    "tbody": [0, 0]
+                    "tbody": [0, 0],
+                    "table": $(`#${id} table`)
                 };
                 let tbody = $(this.elm.children()[0]).children()[0];
                 tbody = $(tbody).children();
@@ -1167,6 +1187,14 @@ class लिपिलेखिकालेखनसहायिका {
             });
         }, 500) // setting this to load later on
     };
+    check_width() {
+        let w = parseInt(this.k.substring(this.elm.css("width"), 0, -2)),
+            elm = this.bhaNDAra.table;
+        if (w >= 250)
+            elm.css("overflow-x", "scroll");
+        else
+            elm.css("overflow-x", "");
+    }
     hide_other() {
         let elm = LipiLekhikA.sahayika;
         if (elm.c == 1)
@@ -1202,6 +1230,7 @@ class लिपिलेखिकालेखनसहायिका {
                     elm.hide_elm(2, x);
                     elm.idAnIma--;
                 };
+                elm.check_width();
             }
             LipiLekhikA.capital = [0, "", -1, -1, 0, 0, false];
         };
@@ -1323,6 +1352,7 @@ class लिपिलेखिकालेखनसहायिका {
                 this.hide_elm(2, x);
             };
         }
+        this.check_width();
         this.idAnIma = len;
         this.c++;
         if (!matra)
