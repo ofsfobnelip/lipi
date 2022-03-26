@@ -988,38 +988,38 @@ class लिपिलेखिकालेखनसहायिका {
         this.abhisthAnam = 0;
         let id = "లిಪಿலேഖിକା";
         this.elm = jQuery(`<div id="${id}"></div>`).appendTo("body");
-        setTimeout(() => {
-            if (true) { // making and adding html
-                let row1 = "",
-                    row2 = "",
-                    r = [`<svg style="enable-background:new 0 0 26 26;" height="18px" width="18px" class="निच्चैरुच्चैः" viewBox="96 160 320 192"><polygon points="396.6,`,
-                        `160 416,180.7 256,352 96,180.7 115.3,160 256,310.5`, `352 416,331.3 256,160 96,331.3 115.3,352 256,201.5`, `"/></svg>`
-                    ],
-                    img = ["", ""];
-                img[0] = `${r[0] + r[1] + r[3]}`;
-                img[1] = `${r[0] + r[2] + r[3]}`;
-                row1 += `<td><span>${img[0]}</span><span>${img[1]}</span></td>`;
-                row2 += `<td><a rel="noopener" href="https://rebrand.ly/lekhika" target="_blank"></a></td>`;
+        if (true) { // making and adding html
+            let row1 = "",
+                row2 = "",
+                r = [`<svg style="enable-background:new 0 0 26 26;" height="18px" width="18px" viewBox="96 160 320 192"><polygon points="396.6,`,
+                    `160 416,180.7 256,352 96,180.7 115.3,160 256,310.5`, `352 416,331.3 256,160 96,331.3 115.3,352 256,201.5`, `"/></svg>`
+                ],
+                img = ["", ""];
+            img[0] = `${r[0] + r[1] + r[3]}`;
+            img[1] = `${r[0] + r[2] + r[3]}`;
+            row1 += `<td><span>${img[0]}</span><span>${img[1]}</span></td>`;
+            row2 += `<td><a rel="noopener" href="https://rebrand.ly/lekhika" target="_blank"></a></td>`;
+            row1 += `<td></td>`;
+            row2 += `<td></td>`;
+            for (let x = 0; x <= 60; x++) {
                 row1 += `<td></td>`;
                 row2 += `<td></td>`;
-                for (let x = 0; x <= 60; x++) {
-                    row1 += `<td></td>`;
-                    row2 += `<td></td>`;
-                };
-                let table = `<table><tbody><tr>${row2}</tr><tr>${row1}</tr></tbody></table><div></div>`;
-                this.elm.append(table);
-            }
+            };
+            let table = `<table><tbody><tr>${row2}</tr><tr>${row1}</tr></tbody></table><div></div>`;
+            this.elm.append(table);
+        }
+        setTimeout(() => {
             if (true) { // adding css
                 let css = [];
 
-                function to_css(pre, dct) {
+                function add_css(pre, dct) {
                     let v = pre + " {\n";
                     for (let x in dct)
                         v += `${x}:${dct[x]};\n`
                     css.push(v + "}");
                     return pre;
                 }
-                to_css(`#${id}`, {
+                add_css(`#${id}`, {
                     "position": "absolute",
                     "background-color": "white",
                     "padding": "2.5px",
@@ -1037,106 +1037,98 @@ class लिपिलेखिकालेखनसहायिका {
                     "font-family": `"Nirmala UI","Calibri"`,
                     "transition-duration": "500ms"
                 });
-                to_css(`#${id} table`, {
+                add_css(`#${id} table`, {
                     "display": "block",
                     "max-width": "210px",
+                    "overflow-x": "scroll"
                 });
-                to_css(`#${id} table::-webkit-scrollbar`, {
+                add_css(`#${id} table::-webkit-scrollbar`, {
                     height: "5px"
                 })
-                to_css(`#${id} table::-webkit-scrollbar-track`, {
-                    background: "#f1f1f1",
+                add_css(`#${id} table::-webkit-scrollbar-track`, {
+                    "background-color": "#e9e9e9",
                     "border-radius": "10px"
                 })
-                to_css(`#${id} table::-webkit-scrollbar-thumb`, {
-                    background: "#888",
-                    "border-radius": "10px",
-                    height: "2px"
+                add_css(`#${id} table::-webkit-scrollbar-thumb`, {
+                    "background-color": "#4040ff",
+                    "border-radius": "10px"
                 })
-                to_css(`#${id} table::-webkit-scrollbar-thumb:hover`, {
-                    background: "#555"
+                add_css(`#${id} table::-webkit-scrollbar-thumb:hover`, {
+                    "background-color": "blue"
                 })
                 let e = `#${id} table tbody tr`; // defined for reusing
-                to_css(`${e}:nth-child(2) td:nth-child(1) span`, {
-                    "cursor": "pointer",
-                    "display": "none",
-                    "position": "absolute",
-                    "top": "37px",
-                    "left": "5px"
+                add_css(`${e}:nth-child(2) td:nth-child(1) span`, {
+                    cursor: "pointer",
+                    display: "none",
+                    position: "absolute",
+                    top: "37px",
+                    left: "5px"
                 }); // adding css for up down pointers
-                to_css(`${e} td`, {
+                add_css(`${e} td`, {
                     "font-size": "18px",
                     "text-align": "center",
-                    "cursor": "grab"
+                    cursor: "grab"
                 });
-                to_css(`${e}:nth-child(1) td`, {
-                    "color": "black"
+                add_css(`${e}:nth-child(1) td`, {
+                    color: "black"
                 });
-                to_css(`${e}:nth-child(2) td`, {
-                    "color": "green"
+                add_css(`${e}:nth-child(2) td`, {
+                    color: "green"
                 });
-                let t = to_css(`${e} td:not(:nth-child(1)):not(:nth-child(2))`, {
-                    "display": "none"
+                let t = add_css(`${e} td:not(:nth-child(1)):not(:nth-child(2))`, {
+                    display: "none"
                 });
-                to_css(`${t}:hover`, {
-                    "color": "blue"
+                add_css(`${t}:hover`, {
+                    color: "blue"
                 }); // adding hover effect
-                to_css(`${e} td:nth-child(2)`, {
+                add_css(`${e} td:nth-child(2)`, {
                     "text-align": "center",
                     "padding-left": "22.5px",
                     "padding-right": "5.6px",
-                    "cursor": "default"
+                    cursor: "default"
                 });
-                to_css(`${e}:nth-child(1) td:nth-child(2)`, {
-                    "color": "brown",
+                add_css(`${e}:nth-child(1) td:nth-child(2)`, {
+                    color: "brown",
                     "font-size": "19.5px"
                 });
-                to_css(`${e}:nth-child(2) td:nth-child(2)`, {
-                    "color": "red",
+                add_css(`${e}:nth-child(2) td:nth-child(2)`, {
+                    color: "red",
                     "font-size": "15px"
                 });
-                to_css(`${e}:nth-child(1) td:nth-child(1) a`, {
-                    "display": "inline-block",
-                    "height": "20px",
-                    "width": "20px",
-                    "position": "absolute",
-                    "left": "4px",
-                    "top": "10px",
+                add_css(`${e}:nth-child(1) td:nth-child(1) a`, {
+                    display: "inline-block",
+                    height: "20px",
+                    width: "20px",
+                    position: "absolute",
+                    left: "4px",
+                    top: "10px",
                     "background-image": `url(${this.k.sanchit}/icon.png)`,
                     "background-size": "20px 20px"
                 })
-                to_css(`#${id} table+div`, {
+                add_css(`#${id} table+div`, {
                     "font-size": "10.5px",
-                    "color": "purple",
+                    color: "purple",
                     "max-width": "fit-content",
                     "min-width": "200px",
-                    "display": "none"
+                    display: "none"
                 })
                 this.elm.append(`<style>${css.join("\n")}</style>`);
             }
             if (true) { // storing elements and adding handlers
                 this.bhaNDAra_index = ["sahayika", "pashchAta", "akShara", "key1", "key2"];
+                let e = `#${id} table tbody tr`; // defined for reusing
                 this.bhaNDAra = {
-                    "sahayika": this.elm.children()[1],
-                    "key1": 0,
-                    "key2": 0,
-                    "pashchAta": 0,
-                    "akShara": 0,
-                    "tbody": [0, 0],
-                    "table": $(`#${id} table`)
+                    "sahayika": $(`#${id} table+div`)[0],
+                    "key1": $(`${e}:nth-child(1) td:nth-child(2)`)[0],
+                    "key2": $(`${e}:nth-child(2) td:nth-child(2)`)[0],
+                    "pashchAta": $(`${e}:nth-child(1) td`),
+                    "akShara": $(`${e}:nth-child(2) td`),
+                    "table": $(`#${id} table`),
+                    "tbody": [$(`${e}:nth-child(1)`)[0], $(`${e}:nth-child(2)`)[0]]
                 };
-                let tbody = $(this.elm.children()[0]).children()[0];
-                tbody = $(tbody).children();
                 this.adhar = 0;
-                this.bhaNDAra.tbody = [tbody[0], tbody[1]];
-                let tr1 = $(tbody[0]).children();
-                let tr2 = $(tbody[1]).children();
-                this.bhaNDAra.pashchAta = tr1;
-                this.bhaNDAra.akShara = tr2;
-                this.bhaNDAra.key1 = tr1[1];
-                this.bhaNDAra.key2 = tr2[1];
-                let img = $(tr2[0]).children(); //1st down 2nd up
-                this.ins_button = [$(img[1]), $(img[0]), 0, 0];
+                let img = $(`${e}:nth-child(2) td:nth-child(1)`).children()
+                this.ins_button = [$(img[1]), $(img[0])];
                 this.ins_sthiti = 1;
                 this.ins_button[this.ins_sthiti].show();
                 this.ins_button[0].on("click", () => this.change_ins(0));
@@ -1146,15 +1138,12 @@ class लिपिलेखिकालेखनसहायिका {
                 this.objs = {
                     "down": $(img[0]),
                     "up": $(img[1]),
-                    "icon": $($(tr1[0]).children()[0])
+                    "icon": $(`${e}:nth-child(1) td:nth-child(1) a`)
                 };
-                let y = $(".निच्चैरुच्चैः");
-                this.ins_button[2] = y[0];
-                this.ins_button[3] = y[1];
             }
             $("body").on("click", (event) => {
                 let obj = LipiLekhikA;
-                let o = this;
+                let o = obj.sahayika;
                 let bh = o.bhaNDAra;
                 if (o.elm.css("display") == "none")
                     return;
@@ -1162,12 +1151,10 @@ class लिपिलेखिकालेखनसहायिका {
                 let p = $(trgt).parents();
                 let sah = p.index(o.elm[0]) != -1; // seeing if the click is inside lekhan sahayika
                 p = $(trgt).parent()[0];
-                if (this.k.in(bh.tbody, p) && !this.k.in([bh.key1, bh.key2], event)) {
+                if (this.k.in(bh.tbody, p) && !this.k.in([bh.key1, bh.key2], trgt)) {
                     // above -> checking if a varna has been clicked
                     sah = true;
                     let el = o.adhar;
-                    if (trgt.value == undefined)
-                        return;
                     for (let x of trgt.value) {
                         if (this.k.in(["input", "textarea"], el[0].tagName.toLowerCase())) {
                             obj.from_click = true;
@@ -1185,16 +1172,8 @@ class लिपिलेखिकालेखनसहायिका {
                 if (!sah)
                     obj.clear_all_val(true);
             });
-        }, 500) // setting this to load later on
+        }, 1);
     };
-    check_width() {
-        let w = parseInt(this.k.substring(this.elm.css("width"), 0, -2)),
-            elm = this.bhaNDAra.table;
-        if (w >= 210)
-            elm.css("overflow-x", "scroll");
-        else
-            elm.css("overflow-x", "");
-    }
     hide_other() {
         let elm = LipiLekhikA.sahayika;
         if (elm.c == 1)
@@ -1209,7 +1188,7 @@ class लिपिलेखिकालेखनसहायिका {
         elm.ins_button[Math.abs(i - 1)].show();
         let el = elm.bhaNDAra.sahayika;
         elm.set_labels(1, t == 0 ? elm.ins_msg : "");
-        el.style.display = t == 1 ? "none" : "block";
+        el.style.display = t == 1 ? "" : "block";
     };
     show(v) {
         if (v["elm"].attr("lekhan-sahayika") != "on")
@@ -1230,7 +1209,6 @@ class लिपिलेखिकालेखनसहायिका {
                     elm.hide_elm(2, x);
                     elm.idAnIma--;
                 };
-                elm.check_width();
             }
             LipiLekhikA.capital = [0, "", -1, -1, 0, 0, false];
         };
@@ -1352,7 +1330,6 @@ class लिपिलेखिकालेखनसहायिका {
                 this.hide_elm(2, x);
             };
         }
-        this.check_width();
         this.idAnIma = len;
         this.c++;
         if (!matra)
