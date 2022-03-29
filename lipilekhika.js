@@ -1042,20 +1042,22 @@ class लिपिलेखिकालेखनसहायिका {
                     "max-width": "210px",
                     "overflow-x": "scroll"
                 });
-                add_css(`#${id} table::-webkit-scrollbar`, {
-                    height: "5px"
-                })
-                add_css(`#${id} table::-webkit-scrollbar-track`, {
-                    "background-color": "#e9e9e9",
-                    "border-radius": "10px"
-                })
-                add_css(`#${id} table::-webkit-scrollbar-thumb`, {
-                    "background-color": "#4040ff",
-                    "border-radius": "10px"
-                })
-                add_css(`#${id} table::-webkit-scrollbar-thumb:hover`, {
-                    "background-color": "blue"
-                })
+                if (!this.k.is_mobile) {
+                    add_css(`#${id} table::-webkit-scrollbar`, {
+                        height: "4.5px"
+                    })
+                    add_css(`#${id} table::-webkit-scrollbar-track`, {
+                        "background-color": "#e9e9e9",
+                        "border-radius": "10px"
+                    })
+                    add_css(`#${id} table::-webkit-scrollbar-thumb`, {
+                        "background-color": "#5353ff",
+                        "border-radius": "10px"
+                    })
+                    add_css(`#${id} table::-webkit-scrollbar-thumb:hover`, {
+                        "background-color": "blue"
+                    })
+                }
                 let e = `#${id} table tbody tr`; // defined for reusing
                 add_css(`${e}:nth-child(2) td:nth-child(1) span`, {
                     cursor: "pointer",
