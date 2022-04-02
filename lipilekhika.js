@@ -226,58 +226,29 @@ class लिपिलेखिकापरिवर्तक {
             elm = args.element;
         this.akSharANi = l.akSharAH[lang];
         this.halant = !l.in(["Normal", "Romanized", "Urdu"], lang) ? this.akSharANi["."][".x"][0] : "";
-        let sa = (args.mode == 0 && mode == 1) ? 0 : 1;
+        let sa = (args.mode == 0 && mode == 1) ? 0 : 1,
+            ignr = [];
         this.dev_text = [];
         html = mode == 0 && html ? true : false;
-        if (html) {
-            let t = code;
-            let vl = {
-                "&nbsp;": " ",
-                "&amp;": "",
-                "<br>": "\n",
-                "<br/>": "\n",
-                "<br />": "\n"
-            };
-            for (let x in vl)
-                t = l.replace_all(t, x, vl[x]);
-            code = t;
-        }
+        if (html)
+            for (let x of l.reg_index(code, new RegExp("(?<=<).+?(?=>)", "g")))
+                ignr.push([x[0] - 1, x[1].length + 2]);
         var add_dev = (v) => {
             if (mode == 0)
                 for (let x of v)
                     this.dev_text.push(x);
         }
-        let html_st = false,
-            ignore_st = false;
         for (let k = 0; k < code.length; k++) {
+            if (html)
+                if (ignr.length > 0)
+                    if (k == ignr[0][0]) {
+                        let ln = ignr[0][1];
+                        ignr.splice(0, 1);
+                        add_dev(code.substring(k, k + ln));
+                        k += ln - 1;
+                        continue;
+                    }
             let key = code[k];
-            if (key == "<" && html) {
-                html_st = true;
-                add_dev(key)
-                this.clear_all_val(true);
-                continue;
-            }
-            if (html_st) {
-                if (key == ">")
-                    html_st = false;
-                add_dev(key)
-                continue;
-            }
-            if (key == "#" && code[k + 1] == "^" && mode == 0 && !ignore_st) {
-                ignore_st = true;
-                this.clear_all_val(true);
-                k++;
-                continue;
-            }
-            if (ignore_st) {
-                if (key == "^" && code[k + 1] == "#") {
-                    ignore_st = false;
-                    k++;
-                    continue;
-                }
-                add_dev(key)
-                continue;
-            }
             if (this.next_chars == "" && key in this.akSharANi) {
                 this.varna[2] = "";
                 this.vitaraNa(key, mode, sa, elm, lang);
@@ -714,9 +685,14 @@ class लिपिलेखिकापरिवर्तक {
             return val;
         var l = लिपि;
         var convert = (ln, t) => this.prakriyA({
-            lang: ln,
-            text: t
-        });
+                lang: ln,
+                text: t,
+                "html": html
+            }),
+            ignr = [];
+        if (html)
+            for (let x of l.reg_index(val, new RegExp("(?<=<).+?(?=>)", "g")))
+                ignr.push([x[0] - 1, x[1].length + 2]);
         if (from == "Normal")
             return convert(to, val);
         var get_antar_kram = (ln, type = 0) => {
@@ -803,10 +779,18 @@ class लिपिलेखिकापरिवर्तक {
             if (!no_more && l.in(["\ud805", "\ud804"], x) &&
                 l.in(["Modi", "Sharada", "Brahmi", "Siddham", "Granth"], from))
                 // ^ also adding support for the above languages through a simple fix
-                return 1;
+                return -2;
             let done = false,
                 sthiti = -1,
                 continued = false;
+            if (html)
+                if (ignr.length > 0)
+                    if (i == ignr[0][0]) {
+                        let ln = ignr[0][1];
+                        ignr.splice(0, 1);
+                        res += val.substring(i, i + ln);
+                        return ln;
+                    }
             if (next != "") {
                 if (!last && l.in(next, x)) {
                     chr += x;
@@ -879,8 +863,11 @@ class लिपिलेखिकापरिवर्तक {
         if (from == "Tamil-Extended")
             val = tamil_ex(val, "from");
         for (let i = 0; i < val.length; i++) {
-            if (1 == loop(val[i], i))
+            let t = loop(val[i], i)
+            if (t == -2)
                 loop(val[i] + val[i + 1], ++i);
+            else if (t >= 2)
+                i += t - 1; // ignoring html elements
         }
         loop(" ", val.length, true);
         if (to == "Tamil-Extended")
