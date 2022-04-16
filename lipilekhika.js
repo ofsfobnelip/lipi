@@ -1384,7 +1384,7 @@ class लिपिquery {
     html() {
         let arg = arguments;
         if (this.length == 0)
-            return;
+            return this;
         if (arg.length == 0)
             return this[0].innerHTML;
         else if (arg.length == 1) {
@@ -1396,7 +1396,7 @@ class लिपिquery {
     text() {
         let arg = arguments;
         if (this.length == 0)
-            return;
+            return this;
         if (arg.length == 0)
             return this[0].innerText;
         else if (arg.length == 1) {
@@ -1408,7 +1408,7 @@ class लिपिquery {
     val() {
         let arg = arguments;
         if (this.length == 0)
-            return;
+            return this;
         if (arg.length == 0)
             return this[0].value;
         else if (arg.length == 1) {
@@ -1420,7 +1420,7 @@ class लिपिquery {
     attr() {
         let arg = arguments;
         if (this.length == 0)
-            return;
+            return this;
         if (arg.length == 1)
             if (typeof (arg[0]) == "object") {
                 for (let x of this.elm)
@@ -1506,14 +1506,14 @@ class लिपिquery {
     focus() {
         let arg = arguments;
         if (this.length == 0)
-            return;
+            return this;
         this[0].focus();
         return this;
     }
     css() {
         let arg = arguments;
         if (this.length == 0)
-            return;
+            return this;
         if (arg.length == 1)
             if (typeof (arg[0]) == "object") {
                 for (let x of this.elm)
@@ -1536,7 +1536,7 @@ class लिपिquery {
     check() {
         let arg = arguments;
         if (this.length == 0)
-            return;
+            return this;
         if (arg.length == 0)
             this[0].checked;
         else if (arg.length == 1) {
@@ -1590,7 +1590,7 @@ class लिपिquery {
     find() {
         let arg = arguments;
         if (this.length == 0)
-            return;
+            return this;
         let o = $l($lf.make("<div></div>"));
         let elm = this[0].querySelectorAll(arg[0]);
         o.length = elm.length;
@@ -1602,19 +1602,19 @@ class लिपिquery {
     width() {
         let arg = arguments;
         if (this.length == 0)
-            return;
+            return this;
         return this[0].offsetWidth;
     }
     height() {
         let arg = arguments;
         if (this.length == 0)
-            return;
+            return this;
         return this[0].offsetHeight;
     }
     parent() {
         let arg = arguments;
         if (this.length == 0)
-            return;
+            return this;
         return this[0].parentElement;
     }
     parents() {
