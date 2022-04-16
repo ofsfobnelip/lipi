@@ -1600,25 +1600,21 @@ class लिपिquery {
         return o;
     }
     width() {
-        let arg = arguments;
         if (this.length == 0)
             return this;
         return this[0].offsetWidth;
     }
     height() {
-        let arg = arguments;
         if (this.length == 0)
             return this;
         return this[0].offsetHeight;
     }
     parent() {
-        let arg = arguments;
         if (this.length == 0)
             return this;
         return this[0].parentElement;
     }
     parents() {
-        let arg = arguments;
         if (this.length == 0)
             return $l([]);
         var a = this[0];
@@ -1630,7 +1626,6 @@ class लिपिquery {
         return els;
     }
     offset(options) {
-        let arg = arguments;
         if (this.length == 0)
             return {
                 top: 0,
@@ -1655,7 +1650,6 @@ class लिपिquery {
         };
     }
     scrollLeft() {
-        let arg = arguments;
         if (this.length == 0)
             return 0;
         return this[0].scrollLeft;
@@ -1671,7 +1665,6 @@ class लिपिquery {
         return this.attr(arg);
     }
     position(parent = null) {
-        let arg = arguments;
         if (this.length == 0)
             return {
                 top: 0,
@@ -1683,6 +1676,24 @@ class लिपिquery {
             top: child.top - parent.top,
             left: child.left - parent.left
         };
+    }
+    resize() {
+        if (this.length == 0)
+            return this;
+        for (let e of this.elm) {
+            let e1 = $l(e)
+            e.style.width = "";
+            let i = e.innerHTML,
+                o = e.outerHTML;
+            o = $lf.replace_all(o, i, "");
+            o = $lf.replace_all(o, "id=", "idk=");
+            o = $l("body").appendHTML(o).show();
+            o.html(`<option>${e1.find("option:checked").html()}</option>`);
+            let f = o.width();
+            o.remove();
+            e.style.width = `${f + 7}px`;
+        }
+        return this;
     }
 }
 class लिपिutil {
@@ -1743,6 +1754,19 @@ class लिपिutil {
     }
     isPlainObject(o) {
         return typeof (o) == 'object' && o.constructor == Object;
+    } in (val, in_what) {
+        return val.indexOf(in_what) != -1;
+    }
+    replace_all(str, replaceWhat, replaceTo) {
+        replaceWhat = replaceWhat.replace(/[-\/\\^$*+?.()|[\]{}]/g, "\\$&");
+        var re = new RegExp(replaceWhat, "g");
+        return str.replace(re, replaceTo);
+    }
+    last(s, l = -1) {
+        if (s == null || s == undefined)
+            return "";
+        let r = s[s.length + l];
+        return r;
     }
 }
 if ($l != undefined)
