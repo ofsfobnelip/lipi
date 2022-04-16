@@ -252,7 +252,7 @@ class लिपिquery {
     parent() {
         if (this.length == 0)
             return this;
-        return this[0].parentElement;
+        return $l(this[0].parentElement);
     }
     parents() {
         if (this.length == 0)
@@ -264,6 +264,9 @@ class लिपिquery {
             a = a.parentNode;
         }
         return els;
+    }
+    index(v) {
+        return this.elm.indexOf(v);
     }
     offset(options) {
         if (this.length == 0)
@@ -1544,7 +1547,7 @@ class लिपिलेखिकालेखनसहायिका {
                 let trgt = event.target;
                 let p = $l(trgt).parents();
                 let sah = p.indexOf(o.elm[0]) != -1; // seeing if the click is inside lekhan sahayika
-                p = $l(trgt).parent();
+                p = $l(trgt).parent()[0];
                 if (this.k.in(bh.tbody, p) && !this.k.in([bh.key1, bh.key2], trgt)) {
                     // above -> checking if a varna has been clicked
                     sah = true;
