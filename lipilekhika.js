@@ -346,16 +346,23 @@ class लिपिutil {
         let xhr = op.xhr || new XMLHttpRequest();
         let _async = "async" in op ? op.async : true;
         xhr.open(op.type || "GET", url, _async);
-        xhr.send(null);
+        let data = op.data || null;
 
         function hdr(k) {
             return xhr.getResponseHeader(k).split(";")[0];
         }
         if ("dataType" in op)
             xhr.responseType = op["dataType"];
+        if ("json" in op) {
+            data = JSON.stringify(op.json);
+            xhr.setRequestHeader("content-type", "application/json;charset=utf-8");
+        }
+        if ("contentType" in op)
+            xhr.setRequestHeader("content-type", op.contentType);
         if ("headers" in op)
             for (let x in op.headers)
                 xhr.setRequestHeader(x, op.headers[x]);
+        xhr.send(data);
         let scs = function () {
             if (xhr.status == 200) {
                 let v = xhr.response;
