@@ -1,4 +1,367 @@
 /* शुभमानन्दगुप्तेन तु भगवत्प्रसादाद्भारते रचितः */
+class लिपिquery {
+    constructor(sel) {
+        this.sel = sel;
+        this.elm = [];
+        this.init();
+    }
+    init() {
+        let sel = this.sel,
+            elm = [];
+        if (typeof (sel) == "object") {
+            if ("innerHTML" in sel)
+                elm = [sel];
+            else
+                elm = sel;
+        } else
+            elm = document.querySelectorAll(sel);
+        this.length = elm.length;
+        for (let x = 0; x < this.length; x++)
+            this[x] = elm[x];
+        this.elm = elm;
+        return this;
+    }
+    html() {
+        if (this.length == 0)
+            return;
+        if (arguments.length == 0)
+            return this[0].innerHTML;
+        else if (arguments.length == 1) {
+            for (let x of this.elm)
+                x.innerHTML = arguments[0];
+            return this;
+        }
+    }
+    text() {
+        if (this.length == 0)
+            return;
+        if (arguments.length == 0)
+            return this[0].innerText;
+        else if (arguments.length == 1) {
+            for (let x of this.elm)
+                x.innerText = arguments[0];
+            return this;
+        }
+    }
+    val() {
+        if (this.length == 0)
+            return;
+        if (arguments.length == 0)
+            return this[0].value;
+        else if (arguments.length == 1) {
+            for (let x of this.elm)
+                x.value = arguments[0];
+            return this;
+        }
+    }
+    attr() {
+        if (this.length == 0)
+            return;
+        if (arguments.length == 1)
+            if (typeof (arguments[0]) == "object") {
+                for (let x of this.elm)
+                    for (let ar in arguments[0])
+                        x.setAttribute(ar, arguments[0][ar])
+                return this;
+            } else
+                return this[0].getAttribute(arguments[0]);
+        else if (arguments.length == 2) {
+            for (let x of this.elm)
+                x.setAttribute(arguments[0], arguments[1])
+            return this;
+        }
+    }
+    removeAttr() {
+        for (let x of this.elm)
+            x.removeAttribute(arguments[0]);
+        return this;
+    }
+    trigger() {
+        for (let x of this.elm)
+            x.dispatchEvent(new Event(arguments[0]));
+        return this;
+    }
+    on() {
+        for (let x of this.elm)
+            x.addEventListener(arguments[0], arguments[1]);
+        return this;
+    }
+    append() {
+        for (let x of this.elm)
+            x.insertAdjacentHTML("beforeend", arguments[0]);
+        return this;
+    }
+    appendHTML() {
+        let el = $lf.make(arguments[0]);
+        for (let x of this.elm)
+            x.insertAdjacentElement("beforeend", el);
+        return $l(el);
+    }
+    afterHTML() {
+        let el = $lf.make(arguments[0]);
+        for (let x of this.elm)
+            x.insertAdjacentElement("afterend", el);
+        return $l(el);
+    }
+    after() {
+        for (let x of this.elm)
+            x.insertAdjacentHTML("afterend", arguments[0])
+        return this;
+    }
+    before() {
+        for (let x of this.elm)
+            x.insertAdjacentHTML("beforebegin", arguments[0])
+        return this;
+    }
+    addClass() {
+        for (let x of this.elm)
+            x.classList.add(arguments[0]);
+        return this;
+    }
+    removeClass() {
+        for (let x of this.elm)
+            x.classList.remove(arguments[0]);
+        return this;
+    }
+    toggleClass() {
+        for (let x of this.elm)
+            x.classList.toggle(arguments[0]);
+        return this;
+    }
+    focus() {
+        if (this.length == 0)
+            return;
+        this[0].focus();
+        return this;
+    }
+    css() {
+        if (this.length == 0)
+            return;
+        if (arguments.length == 1)
+            if (typeof (arguments[0]) == "object") {
+                for (let x of this.elm)
+                    Object.assign(x.style, arguments[0]);
+                return this;
+            } else
+                return getComputedStyle(this[0])[arguments[0]];
+        else if (arguments.length == 2) {
+            for (let x of this.elm)
+                x.style[arguments[0]] = arguments[1];
+            return this;
+        }
+    }
+    removeCss() {
+        for (let x of this.elm)
+            x.style.removeProperty(arguments[0]);
+        return this;
+    }
+    check() {
+        if (this.length == 0)
+            return;
+        if (arguments.length == 0)
+            this[0].checked;
+        else if (arguments.length == 1) {
+            for (let x of this.elm)
+                x.checked = arguments[0];
+            return this;
+        }
+    }
+    show() {
+        let lst = {
+            div: "block",
+            span: "inline"
+        }
+        for (let x of this.elm) {
+            let e = $l(x);
+            e.removeCss("display");
+            if (e.css("display") == "none") {
+                let nm = x.tagName.toLowerCase();
+                if (nm in lst) {
+                    e.css("display", lst[nm]);
+                } else {
+                    let el = $l("body").appendHTML(`<${nm}></${nm}>`);
+                    e.css("display", el.css("display"));
+                    el.remove();
+                }
+            }
+        }
+        return this;
+    }
+    hide() {
+        for (let x of this.elm)
+            x.style.display = "none";
+        return this;
+    }
+    children() {
+        let ch = [];
+        for (let x of this.elm) {
+            for (let y of x.children)
+                ch.push(y)
+        }
+        return ch;
+    }
+    remove() {
+        for (let x of this.elm)
+            x.remove();
+    }
+    find() {
+        if (this.length == 0)
+            return;
+        let o = $l($lf.make("<div></div>"));
+        let elm = this[0].querySelectorAll(arguments[0]);
+        o.length = elm.length;
+        for (let x = 0; x < o.length; x++)
+            o[x] = elm[x];
+        o.elm = elm;
+        return o;
+    }
+    width() {
+        if (this.length == 0)
+            return;
+        return this[0].offsetWidth;
+    }
+    height() {
+        if (this.length == 0)
+            return;
+        return this[0].offsetHeight;
+    }
+    parent() {
+        if (this.length == 0)
+            return;
+        return this[0].parentElement;
+    }
+    parents() {
+        if (this.length == 0)
+            return $l([]);
+        var a = this[0];
+        var els = [];
+        while (a) {
+            els.push(a);
+            a = a.parentNode;
+        }
+        return els;
+    }
+    offset(options) {
+        if (this.length == 0)
+            return {
+                top: 0,
+                left: 0
+            };
+        var rect, win,
+            elem = this[0];
+        if (!elem) {
+            return;
+        }
+        if (!elem.getClientRects().length) {
+            return {
+                top: 0,
+                left: 0
+            };
+        }
+        rect = elem.getBoundingClientRect();
+        win = elem.ownerDocument.defaultView;
+        return {
+            top: rect.top + win.pageYOffset,
+            left: rect.left + win.pageXOffset
+        };
+    }
+    scrollLeft() {
+        if (this.length == 0)
+            return 0;
+        return this[0].scrollLeft;
+    }
+    scrollTop() {
+        if (this.length == 0)
+            return 0;
+        return this[0].scrollTop;
+    }
+    prop() {
+        return this.attr(arguments);
+    }
+    position(parent = null) {
+        if (this.length == 0)
+            return {
+                top: 0,
+                left: 0
+            };
+        let child = this[0].getBoundingClientRect();
+        var parent = this[0].parentElement.getBoundingClientRect();
+        return {
+            top: child.top - parent.top,
+            left: child.left - parent.left
+        };
+    }
+}
+class लिपिutil {
+    make(html) {
+        var template = document.createElement('div');
+        template.innerHTML = html.trim();
+        return template.firstChild;
+    }
+    ajax(url, op = {}) {
+        let xhr = op.xhr || new XMLHttpRequest();
+        let _async = "async" in op ? op.async : true;
+        xhr.open(op.type || "GET", url, _async);
+        xhr.send(null);
+
+        function hdr(k) {
+            return xhr.getResponseHeader(k).split(";")[0];
+        }
+        if ("dataType" in op)
+            xhr.responseType = op["dataType"];
+        if ("headers" in op)
+            for (let x in op.headers)
+                xhr.setRequestHeader(x, op.headers[x]);
+        let scs = function () {
+            if (xhr.status == 200) {
+                let v = xhr.response;
+                if (hdr("content-type") == "application/json" && xhr.responseType != "json")
+                    v = JSON.parse(xhr.response);
+                if ("success" in op)
+                    op.success(v, xhr);
+                return v;
+            } else {
+                if ("error" in op)
+                    op.error(xhr);
+                return "error";
+            }
+        }
+        if (_async)
+            return new Promise(rs => {
+                xhr.onerror = () => rs("Network Error");
+                xhr.onload = () => rs(scs());
+            });
+        else
+            return scs();
+    }
+    get(url, op = {}) {
+        op.type = "GET";
+        return this.ajax(url, op);
+    }
+    post(url, op = {}) {
+        op.type = "POST";
+        return this.ajax(url, op);
+    }
+    getScript(url) {
+        let e = document.createElement("script");
+        e.src = url;
+        $l("body")[0].appendChild(e)
+        e.remove();
+    }
+    isPlainObject(o) {
+        return typeof (o) == 'object' && o.constructor == Object;
+    }
+}
+if ($l != undefined)
+    $l = undefined;
+var $l = function (sel) {
+    let el = new लिपिquery(sel);
+    el.init();
+    return el;
+}
+if ($lf != undefined)
+    $lf = undefined;
+var $lf = new लिपिutil();
 class लिपिलेखिकासहायक {
     constructor() {
         this.akSharAH = {
@@ -25,9 +388,7 @@ class लिपिलेखिकासहायक {
     load_lang(lang, callback = null, block = false) {
         lang = lang == "Devanagari" ? "Sanskrit" : lang;
         if (!(lang in this.akSharAH)) {
-            return $.get({
-                url: this.sanchit + `/${lang}.json`,
-                dataType: "json",
+            return $lf.get(this.sanchit + `/${lang}.json`, {
                 'async': !block,
                 success: (result) => {
                     this.akSharAH[lang] = result;
@@ -519,7 +880,7 @@ class लिपिलेखिकापरिवर्तक {
                     this.from_click = false;
             } else {
                 let dyn = elm.html();
-                let caret = new VanillaCaret(elm[0]);
+                let caret = new $lf.CaretPos(elm[0]);
                 let current_cursor_pos = caret.getPos() + 1;
                 if (this.from_click)
                     current_cursor_pos = this.sahayika.abhisthAnam;
@@ -892,36 +1253,17 @@ class लिपिलेखिकापरिवर्तक {
         this.added_fonts.push(lang);
     };
 };
-jQuery.fn.lipi_lekhika_add = (attri = false) => {
-    let k = LipiLekhikA;
-    let m = k.k;
-    if (m.elms.indexOf(this) != -1)
-        return;
-    else
-        m.elms.push(this);
-    if (!attri) {
-        this.on("input", function () {
-            k.mukhya($(this), event);
-        });
-        this.on("keydown", function () {
-            m.clear(event);
-        });
-    } else {
-        this.attr("oninput", "LipiLekhikA.mukhya($(this), event);");
-        this.attr("onkeydown", "लिपि.clear(event);");
-    }
-};
-jQuery.lipi_lekhika = (time = 60) => {
+var lipi_lekhika = function (time = 60) {
     let k = LipiLekhikA;
     let m = k.k;
     if (k.init)
         return;
 
     function mn() {
-        let elm = $(".Lipi-LekhikA");
+        let elm = $l(".Lipi-LekhikA");
         let lek = ["lipi-lekhika", "lekhan-sahayika"];
-        for (let x of elm) {
-            let e = $(x);
+        for (let x of elm.elm) {
+            let e = $l(x);
             if (m.elms.indexOf(x) != -1)
                 continue;
             else
@@ -932,17 +1274,17 @@ jQuery.lipi_lekhika = (time = 60) => {
                 if (e.attr(v) == undefined)
                     e.attr(v, "on");
             }
-            elm.attr({
+            e.attr({
                 autocapitalize: "none",
                 autocomplete: "off",
                 autocorrect: "off"
             });
-            x.oninput = function () {
-                k.mukhya($(x), event);
-            };
-            x.onkeydown = function () {
-                m.clear(event);
-            };
+            e.on("input", function (ev) {
+                k.mukhya($l(x), ev);
+            });
+            e.on("keydown", function (ev) {
+                m.clear(ev);
+            });
             if (e.attr("lipi-lang") != undefined)
                 m.load_lang(e.attr("lipi-lang"))
         };
@@ -953,10 +1295,10 @@ jQuery.lipi_lekhika = (time = 60) => {
         k.init = true;
     return k;
 };
-jQuery.load_lekhika_lang = (lang, call = null) => {
+var load_lekhika_lang = (lang, call = null) => {
     LipiLekhikA.k.load_lang(lang, call);
 };
-jQuery.lekhika_convert = (text, from, to) => {
+var lekhika_convert = (text, from, to) => {
     return LipiLekhikA.parivartak(text, from, to);
 };
 class लिपिलेखिकालेखनसहायिका {
@@ -974,7 +1316,7 @@ class लिपिलेखिकालेखनसहायिका {
         this.set_lang("English");
         this.abhisthAnam = 0;
         let id = "లిಪಿலேഖിକା";
-        this.elm = jQuery(`<div id="${id}"></div>`).appendTo("body");
+        this.elm = $l("body").appendHTML(`<div id="${id}" style="display:none;"></div>`);
         if (true) { // making and adding html
             let row1 = "",
                 row2 = "",
@@ -1013,7 +1355,6 @@ class लिपिलेखिकालेखनसहायिका {
                     "border": "2px solid black",
                     "border-radius": "4.5px",
                     "font-weight": "bold",
-                    "display": "none",
                     "z-index": "1000000",
                     "user-select": "none",
                     "cursor": "default",
@@ -1107,17 +1448,17 @@ class लिपिलेखिकालेखनसहायिका {
                 this.bhaNDAra_index = ["sahayika", "pashchAta", "akShara", "key1", "key2"];
                 let e = `#${id} table tbody tr`; // defined for reusing
                 this.bhaNDAra = {
-                    "sahayika": $(`#${id} table+div`)[0],
-                    "key1": $(`${e}:nth-child(1) td:nth-child(2)`)[0],
-                    "key2": $(`${e}:nth-child(2) td:nth-child(2)`)[0],
-                    "pashchAta": $(`${e}:nth-child(1) td`),
-                    "akShara": $(`${e}:nth-child(2) td`),
-                    "table": $(`#${id} table`),
-                    "tbody": [$(`${e}:nth-child(1)`)[0], $(`${e}:nth-child(2)`)[0]]
+                    "sahayika": $l(`#${id} table+div`)[0],
+                    "key1": $l(`${e}:nth-child(1) td:nth-child(2)`)[0],
+                    "key2": $l(`${e}:nth-child(2) td:nth-child(2)`)[0],
+                    "pashchAta": $l(`${e}:nth-child(1) td`),
+                    "akShara": $l(`${e}:nth-child(2) td`),
+                    "table": $l(`#${id} table`),
+                    "tbody": [$l(`${e}:nth-child(1)`)[0], $l(`${e}:nth-child(2)`)[0]]
                 };
                 this.adhar = 0;
-                let img = $(`${e}:nth-child(2) td:nth-child(1)`).children()
-                this.ins_button = [$(img[1]), $(img[0])];
+                let img = $l(`${e}:nth-child(2) td:nth-child(1)`).children()
+                this.ins_button = [$l(img[1]), $l(img[0])];
                 this.ins_sthiti = 1;
                 this.ins_button[this.ins_sthiti].show();
                 this.ins_button[0].on("click", () => this.change_ins(0));
@@ -1125,21 +1466,21 @@ class लिपिलेखिकालेखनसहायिका {
                 if (this.ins_sthiti == 1)
                     this.bhaNDAra.sahayika.style.display = "none";
                 this.objs = {
-                    "down": $(img[0]),
-                    "up": $(img[1]),
-                    "icon": $(`${e}:nth-child(1) td:nth-child(1) a`)
+                    "down": $l(img[0]),
+                    "up": $l(img[1]),
+                    "icon": $l(`${e}:nth-child(1) td:nth-child(1) a`)
                 };
             }
-            $("body").on("click", (event) => {
+            $l("body").on("click", (event) => {
                 let obj = LipiLekhikA;
                 let o = obj.sahayika;
                 let bh = o.bhaNDAra;
                 if (o.elm.css("display") == "none")
                     return;
                 let trgt = event.target;
-                let p = $(trgt).parents();
-                let sah = p.index(o.elm[0]) != -1; // seeing if the click is inside lekhan sahayika
-                p = $(trgt).parent()[0];
+                let p = $l(trgt).parents();
+                let sah = p.indexOf(o.elm[0]) != -1; // seeing if the click is inside lekhan sahayika
+                p = $l(trgt).parent();
                 if (this.k.in(bh.tbody, p) && !this.k.in([bh.key1, bh.key2], trgt)) {
                     // above -> checking if a varna has been clicked
                     sah = true;
@@ -1221,10 +1562,9 @@ class लिपिलेखिकालेखनसहायिका {
         let top = cordinate.top,
             hieght = cordinate.height,
             left = cordinate.left;
-        if (l.in(["input", "textarea"], v.elm[0].tagName.toLowerCase())) {
-            this.abhisthAnam = v.elm.selectionStart + 1;
-        } else {
-            let caret = new VanillaCaret(v.elm[0]);
+        // abhisthanam is to store the current position in contenteditable as it is lost on click
+        if (!l.in(["input", "textarea"], v.elm[0].tagName.toLowerCase())) {
+            let caret = new $lf.CaretPos(v.elm[0]);
             this.abhisthAnam = caret.getPos() + 2;
         }
         this.elm[0].style.top = `${top + hieght}px`;
@@ -1368,18 +1708,453 @@ class लिपिलेखिकालेखनसहायिका {
                 this.set_labels(1, this.ins_msg);
         };
         if (!(l in this.display)) {
-            $.get({
-                url: `${this.k.sanchit}/sahayika/${l}.json`,
-                dataType: "json",
-                success: (result) => {
-                    this.display[l] = result;
-                    gh();
-                }
-            });
+            $lf.get(
+                `${this.k.sanchit}/sahayika/${l}.json`, {
+                    dataType: "json",
+                    success: (result) => {
+                        this.display[l] = result;
+                        gh();
+                    }
+                });
         } else
             gh();
     };
 };
 let LipiLekhikA = new लिपिलेखिकापरिवर्तक();
 लिपि.k = LipiLekhikA;
-!function(t,e){if("function"==typeof define&&define.amd)define("VanillaCaret",["module"],e);else if("undefined"!=typeof exports)e(module);else{var n={exports:{}};e(n),t.VanillaCaret=n.exports}}(this,function(t){"use strict";var e=function(){function t(t,e){for(var n=0;n<e.length;n++){var o=e[n];o.enumerable=o.enumerable||!1,o.configurable=!0,"value"in o&&(o.writable=!0),Object.defineProperty(t,o.key,o)}}return function(e,n,o){return n&&t(e.prototype,n),o&&t(e,o),e}}(),n=function(){function t(e){(function(t,e){if(!(t instanceof e))throw new TypeError("Cannot call a class as a function")})(this,t),this.target=e,this.isContentEditable=e&&e.contentEditable}return e(t,[{key:"getPos",value:function(){if(document.activeElement!==this.target)return-1;if(this.isContentEditable){this.target.focus();var t=document.getSelection().getRangeAt(0),e=t.cloneRange();return e.selectNodeContents(this.target),e.setEnd(t.endContainer,t.endOffset),e.toString().length}return this.target.selectionStart}},{key:"setPos",value:function(t){if(this.isContentEditable){if(t>=0){var e=window.getSelection(),n=this.createRange(this.target,{count:t});n&&(n.collapse(!1),e.removeAllRanges(),e.addRange(n))}}else this.target.setSelectionRange(t,t)}},{key:"createRange",value:function(t,e,n){if(n||((n=document.createRange()).selectNode(t),n.setStart(t,0)),0===e.count)n.setEnd(t,e.count);else if(t&&e.count>0)if(t.nodeType===Node.TEXT_NODE)t.textContent.length<e.count?e.count-=t.textContent.length:(n.setEnd(t,e.count),e.count=0);else for(var o=0;o<t.childNodes.length&&(n=this.createRange(t.childNodes[o],e,n),0!==e.count);o++);return n}}]),t}();t.exports=n}),function(t,e){"function"==typeof define&&define.amd?define(["jquery"],function(n){return t.returnExportsGlobal=e(n)}):"object"==typeof exports?module.exports=e(require("jquery")):e(jQuery)}(this,function(t){var e,n,o,r,i,s,a,l;e=function(){function e(t){this.$inputor=t,this.domInputor=this.$inputor[0]}return e.prototype.setPos=function(t){var e,n,o,r;return(r=a.getSelection())&&(o=0,n=!1,(e=function(t,i){var a,l,c,u,f,p;for(p=[],c=0,u=(f=i.childNodes).length;c<u&&(a=f[c],!n);c++)if(3===a.nodeType){if(o+a.length>=t){n=!0,(l=s.createRange()).setStart(a,t-o),r.removeAllRanges(),r.addRange(l);break}p.push(o+=a.length)}else p.push(e(t,a));return p})(t,this.domInputor)),this.domInputor},e.prototype.getIEPosition=function(){return this.getPosition()},e.prototype.getPosition=function(){var t,e;return e=this.getOffset(),t=this.$inputor.offset(),e.left-=t.left,e.top-=t.top,e},e.prototype.getOldIEPos=function(){var t,e;return e=s.selection.createRange(),(t=s.body.createTextRange()).moveToElementText(this.domInputor),t.setEndPoint("EndToEnd",e),t.text.length},e.prototype.getPos=function(){var t,e,n;return(n=this.range())?((t=n.cloneRange()).selectNodeContents(this.domInputor),t.setEnd(n.endContainer,n.endOffset),e=t.toString().length,t.detach(),e):s.selection?this.getOldIEPos():void 0},e.prototype.getOldIEOffset=function(){var t,e;return(t=s.selection.createRange().duplicate()).moveStart("character",-1),{height:(e=t.getBoundingClientRect()).bottom-e.top,left:e.left,top:e.top}},e.prototype.getOffset=function(e){var n,o,r,i,l;return a.getSelection&&(r=this.range())?(r.endOffset-1>0&&r.endContainer!==this.domInputor&&((n=r.cloneRange()).setStart(r.endContainer,r.endOffset-1),n.setEnd(r.endContainer,r.endOffset),o={height:(i=n.getBoundingClientRect()).height,left:i.left+i.width,top:i.top},n.detach()),o&&0!==(null!=o?o.height:void 0)||(n=r.cloneRange(),l=t(s.createTextNode("|")),n.insertNode(l[0]),n.selectNode(l[0]),o={height:(i=n.getBoundingClientRect()).height,left:i.left,top:i.top},l.remove(),n.detach())):s.selection&&(o=this.getOldIEOffset()),o&&(o.top+=t(a).scrollTop(),o.left+=t(a).scrollLeft()),o},e.prototype.range=function(){var t;if(a.getSelection)return(t=a.getSelection()).rangeCount>0?t.getRangeAt(0):null},e}(),n=function(){function e(t){this.$inputor=t,this.domInputor=this.$inputor[0]}return e.prototype.getIEPos=function(){var t,e,n,o,r,i;return e=this.domInputor,o=0,(r=s.selection.createRange())&&r.parentElement()===e&&(n=e.value.replace(/\r\n/g,"\n").length,(i=e.createTextRange()).moveToBookmark(r.getBookmark()),(t=e.createTextRange()).collapse(!1),o=i.compareEndPoints("StartToEnd",t)>-1?n:-i.moveStart("character",-n)),o},e.prototype.getPos=function(){return s.selection?this.getIEPos():this.domInputor.selectionStart},e.prototype.setPos=function(t){var e,n;return e=this.domInputor,s.selection?((n=e.createTextRange()).move("character",t),n.select()):e.setSelectionRange&&e.setSelectionRange(t,t),e},e.prototype.getIEOffset=function(t){var e;return e=this.domInputor.createTextRange(),t||(t=this.getPos()),e.move("character",t),{left:e.boundingLeft,top:e.boundingTop,height:e.boundingHeight}},e.prototype.getOffset=function(e){var n,o,r;return n=this.$inputor,s.selection?((o=this.getIEOffset(e)).top+=t(a).scrollTop()+n.scrollTop(),o.left+=t(a).scrollLeft()+n.scrollLeft(),o):(o=n.offset(),r=this.getPosition(e),{left:o.left+r.left-n.scrollLeft(),top:o.top+r.top-n.scrollTop(),height:r.height})},e.prototype.getPosition=function(t){var e,n,r,i,s;return e=this.$inputor,r=function(t){return t=t.replace(/<|>|`|"|&/g,"?").replace(/\r\n|\r|\n/g,"<br/>"),/firefox/i.test(navigator.userAgent)&&(t=t.replace(/\s/g,"&nbsp;")),t},void 0===t&&(t=this.getPos()),s=e.val().slice(0,t),n=e.val().slice(t),i="<span style='position: relative; display: inline;'>"+r(s)+"</span>",i+="<span id='caret' style='position: relative; display: inline;'>|</span>",i+="<span style='position: relative; display: inline;'>"+r(n)+"</span>",new o(e).create(i).rect()},e.prototype.getIEPosition=function(t){var e,n;return n=this.getIEOffset(t),e=this.$inputor.offset(),{left:n.left-e.left,top:n.top-e.top,height:n.height}},e}(),o=function(){function e(t){this.$inputor=t}return e.prototype.css_attr=["borderBottomWidth","borderLeftWidth","borderRightWidth","borderTopStyle","borderRightStyle","borderBottomStyle","borderLeftStyle","borderTopWidth","boxSizing","fontFamily","fontSize","fontWeight","height","letterSpacing","lineHeight","marginBottom","marginLeft","marginRight","marginTop","outlineWidth","overflow","overflowX","overflowY","paddingBottom","paddingLeft","paddingRight","paddingTop","textAlign","textOverflow","textTransform","whiteSpace","wordBreak","wordWrap"],e.prototype.mirrorCss=function(){var e,n=this;return e={position:"absolute",left:-9999,top:0,zIndex:-2e4},"TEXTAREA"===this.$inputor.prop("tagName")&&this.css_attr.push("width"),t.each(this.css_attr,function(t,o){return e[o]=n.$inputor.css(o)}),e},e.prototype.create=function(e){return this.$mirror=t("<div></div>"),this.$mirror.css(this.mirrorCss()),this.$mirror.html(e),this.$inputor.after(this.$mirror),this},e.prototype.rect=function(){var t,e,n;return n={left:(e=(t=this.$mirror.find("#caret")).position()).left,top:e.top,height:t.height()},this.$mirror.remove(),n},e}(),r={contentEditable:function(t){return!(!t[0].contentEditable||"true"!==t[0].contentEditable)}},i={pos:function(t){return t||0===t?this.setPos(t):this.getPos()},position:function(t){return s.selection?this.getIEPosition(t):this.getPosition(t)},offset:function(t){return this.getOffset(t)}},s=null,a=null,l=function(t){var e;return(e=null!=t?t.iframe:void 0)?(e,a=e.contentWindow,s=e.contentDocument||a.document):(void 0,a=window,s=document)},t.fn.caret=function(o,s,a){var c;return i[o]?(t.isPlainObject(s)?(l(s),s=void 0):l(a),c=r.contentEditable(this)?new e(this):new n(this),i[o].apply(c,[s])):t.error("Method "+o+" does not exist on jQuery.caret")},t.fn.caret.EditableCaret=e,t.fn.caret.InputCaret=n,t.fn.caret.Utils=r,t.fn.caret.apis=i});
+if (true) {
+    // https://github.com/abhas9/vanilla-caret-js
+    (function (factory) {
+        var mod = {
+            exports: {}
+        };
+        factory(mod);
+        $lf.CaretPos = mod.exports;
+    })(function (module) {
+        'use strict';
+
+        function _classCallCheck(instance, Constructor) {
+            if (!(instance instanceof Constructor)) {
+                throw new TypeError("Cannot call a class as a function");
+            }
+        }
+        var _createClass = function () {
+            function defineProperties(target, props) {
+                for (var i = 0; i < props.length; i++) {
+                    var descriptor = props[i];
+                    descriptor.enumerable = descriptor.enumerable || false;
+                    descriptor.configurable = true;
+                    if ("value" in descriptor) descriptor.writable = true;
+                    Object.defineProperty(target, descriptor.key, descriptor);
+                }
+            }
+            return function (Constructor, protoProps, staticProps) {
+                if (protoProps) defineProperties(Constructor.prototype, protoProps);
+                if (staticProps) defineProperties(Constructor, staticProps);
+                return Constructor;
+            };
+        }();
+        var CaretPos = function () {
+            function CaretPos(target) {
+                _classCallCheck(this, CaretPos);
+
+                this.target = target;
+                this.isContentEditable = target && target.contentEditable;
+            }
+            _createClass(CaretPos, [{
+                key: 'getPos',
+                value: function getPos() {
+                    if (document.activeElement !== this.target) {
+                        return -1;
+                    }
+                    if (this.isContentEditable) {
+                        this.target.focus();
+                        var _range = document.getSelection().getRangeAt(0);
+                        var range = _range.cloneRange();
+                        range.selectNodeContents(this.target);
+                        range.setEnd(_range.endContainer, _range.endOffset);
+                        return range.toString().length;
+                    }
+
+                    return this.target.selectionStart;
+                }
+            }, {
+                key: 'setPos',
+                value: function setPos(position) {
+                    if (this.isContentEditable) {
+                        if (position >= 0) {
+                            var selection = window.getSelection();
+                            var range = this.createRange(this.target, {
+                                count: position
+                            });
+                            if (range) {
+                                range.collapse(false);
+                                selection.removeAllRanges();
+                                selection.addRange(range);
+                            }
+                        }
+                    } else {
+                        this.target.setSelectionRange(position, position);
+                    }
+                }
+            }, {
+                key: 'createRange',
+                value: function createRange(node, chars, range) {
+                    if (!range) {
+                        range = document.createRange();
+                        range.selectNode(node);
+                        range.setStart(node, 0);
+                    }
+                    if (chars.count === 0) {
+                        range.setEnd(node, chars.count);
+                    } else if (node && chars.count > 0) {
+                        if (node.nodeType === Node.TEXT_NODE) {
+                            if (node.textContent.length < chars.count) {
+                                chars.count -= node.textContent.length;
+                            } else {
+                                range.setEnd(node, chars.count);
+                                chars.count = 0;
+                            }
+                        } else {
+                            for (var lp = 0; lp < node.childNodes.length; lp++) {
+                                range = this.createRange(node.childNodes[lp], chars, range);
+                                if (chars.count === 0) {
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                    return range;
+                }
+            }]);
+
+            return CaretPos;
+        }();
+        module.exports = CaretPos;
+    });
+}
+if (true) {
+    // https://github.com/ichord/Caret.js/
+    // मया पुनर्सृष्टः
+    (function (factory) {
+        factory();
+    }(function () {
+        "use strict";
+        var EditableCaret, InputCaret, Mirror, Utils, discoveryIframeOf, methods, oDocument, oFrame, oWindow, pluginName, setContextBy;
+        pluginName = 'caret';
+        EditableCaret = (function () {
+            function EditableCaret($inputor) {
+                this.$inputor = $inputor;
+                this.domInputor = this.$inputor[0];
+            }
+            EditableCaret.prototype.setPos = function (pos) {
+                var fn, found, offset, sel;
+                if (sel = oWindow.getSelection()) {
+                    offset = 0;
+                    found = false;
+                    (fn = function (pos, parent) {
+                        var node, range, _i, _len, _ref, _results;
+                        _ref = parent.childNodes;
+                        _results = [];
+                        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+                            node = _ref[_i];
+                            if (found) {
+                                break;
+                            }
+                            if (node.nodeType === 3) {
+                                if (offset + node.length >= pos) {
+                                    found = true;
+                                    range = oDocument.createRange();
+                                    range.setStart(node, pos - offset);
+                                    sel.removeAllRanges();
+                                    sel.addRange(range);
+                                    break;
+                                } else {
+                                    _results.push(offset += node.length);
+                                }
+                            } else {
+                                _results.push(fn(pos, node));
+                            }
+                        }
+                        return _results;
+                    })(pos, this.domInputor);
+                }
+                return this.domInputor;
+            };
+            EditableCaret.prototype.getIEPosition = function () {
+                return this.getPosition();
+            };
+            EditableCaret.prototype.getPosition = function () {
+                var inputor_offset, offset;
+                offset = this.getOffset();
+                inputor_offset = this.$inputor.offset();
+                offset.left -= inputor_offset.left;
+                offset.top -= inputor_offset.top;
+                return offset;
+            };
+            EditableCaret.prototype.getPos = function () {
+                var clonedRange, pos, range;
+                if (range = this.range()) {
+                    clonedRange = range.cloneRange();
+                    clonedRange.selectNodeContents(this.domInputor);
+                    clonedRange.setEnd(range.endContainer, range.endOffset);
+                    pos = clonedRange.toString().length;
+                    clonedRange.detach();
+                    return pos;
+                }
+            };
+            EditableCaret.prototype.getOffset = function (pos) {
+                var clonedRange, offset, range, rect, shadowCaret;
+                if (oWindow.getSelection && (range = this.range())) {
+                    if (range.endOffset - 1 > 0 && range.endContainer !== this.domInputor) {
+                        clonedRange = range.cloneRange();
+                        clonedRange.setStart(range.endContainer, range.endOffset - 1);
+                        clonedRange.setEnd(range.endContainer, range.endOffset);
+                        rect = clonedRange.getBoundingClientRect();
+                        offset = {
+                            height: rect.height,
+                            left: rect.left + rect.width,
+                            top: rect.top
+                        };
+                        clonedRange.detach();
+                    }
+                    if (!offset || (offset != null ? offset.height : void 0) === 0) {
+                        clonedRange = range.cloneRange();
+                        shadowCaret = oDocument.createTextNode("|");
+                        clonedRange.insertNode(shadowCaret);
+                        clonedRange.selectNode(shadowCaret);
+                        rect = clonedRange.getBoundingClientRect();
+                        offset = {
+                            height: rect.height,
+                            left: rect.left,
+                            top: rect.top
+                        };
+                        shadowCaret.remove();
+                        clonedRange.detach();
+                    }
+                }
+                if (offset) {
+                    offset.top += oWindow.scrollY;
+                    offset.left += oWindow.scrollX;
+                }
+                return offset;
+            };
+            EditableCaret.prototype.range = function () {
+                var sel;
+                if (!oWindow.getSelection) {
+                    return;
+                }
+                sel = oWindow.getSelection();
+                if (sel.rangeCount > 0) {
+                    return sel.getRangeAt(0);
+                } else {
+                    return null;
+                }
+            };
+            return EditableCaret;
+        })();
+        InputCaret = (function () {
+            function InputCaret($inputor) {
+                this.$inputor = $inputor;
+                this.domInputor = this.$inputor[0];
+            }
+            InputCaret.prototype.getPos = function () {
+                return this.domInputor.selectionStart;
+            };
+            InputCaret.prototype.setPos = function (pos) {
+                var inputor, range;
+                inputor = this.domInputor;
+                if (oDocument.selection) {
+                    range = inputor.createTextRange();
+                    range.move("character", pos);
+                    range.select();
+                } else if (inputor.setSelectionRange) {
+                    inputor.setSelectionRange(pos, pos);
+                }
+                return inputor;
+            };
+            InputCaret.prototype.getIEOffset = function (pos) {
+                var h, textRange, x, y;
+                textRange = this.domInputor.createTextRange();
+                pos || (pos = this.getPos());
+                textRange.move('character', pos);
+                x = textRange.boundingLeft;
+                y = textRange.boundingTop;
+                h = textRange.boundingHeight;
+                return {
+                    left: x,
+                    top: y,
+                    height: h
+                };
+            };
+            InputCaret.prototype.getOffset = function (pos) {
+                var $inputor, offset, position;
+                $inputor = this.$inputor;
+                if (oDocument.selection) {
+                    offset = this.getIEOffset(pos);
+                    offset.top += oWindow.scrollY + $inputor.scrollTop();
+                    offset.left += oWindow.scrollX + $inputor.scrollLeft();
+                    return offset;
+                } else {
+                    offset = $inputor.offset();
+                    position = this.getPosition(pos);
+                    return offset = {
+                        left: offset.left + position.left - $inputor.scrollLeft(),
+                        top: offset.top + position.top - $inputor.scrollTop(),
+                        height: position.height
+                    };
+                }
+            };
+            InputCaret.prototype.getPosition = function (pos) {
+                var $inputor, at_rect, end_range, format, html, mirror, start_range;
+                $inputor = this.$inputor;
+                format = function (value) {
+                    value = value.replace(/<|>|`|"|&/g, '?').replace(/\r\n|\r|\n/g, "<br/>");
+                    if (/firefox/i.test(navigator.userAgent)) {
+                        value = value.replace(/\s/g, '&nbsp;');
+                    }
+                    return value;
+                };
+                if (pos === void 0) {
+                    pos = this.getPos();
+                }
+                start_range = $inputor.val().slice(0, pos);
+                end_range = $inputor.val().slice(pos);
+                html = format(start_range);
+                html += "<span id='caret' style='position: relative; display: inline;'></span>";
+                html += "<span id='caret_h' style='position: relative; display: inline;'>|</span>";
+                html += format(end_range)
+                mirror = new Mirror($inputor);
+                return at_rect = mirror.create(html).rect();
+            };
+            InputCaret.prototype.getIEPosition = function (pos) {
+                var h, inputorOffset, offset, x, y;
+                offset = this.getIEOffset(pos);
+                inputorOffset = this.$inputor.offset();
+                x = offset.left - inputorOffset.left;
+                y = offset.top - inputorOffset.top;
+                h = offset.height;
+                return {
+                    left: x,
+                    top: y,
+                    height: h
+                };
+            };
+            return InputCaret;
+        })();
+        Mirror = (function () {
+            Mirror.prototype.css_attr = ["borderBottomWidth", "borderLeftWidth", "borderRightWidth", "borderTopStyle", "borderRightStyle", "borderBottomStyle", "borderLeftStyle", "borderTopWidth", "boxSizing", "fontFamily", "fontSize", "fontWeight", "height", "letterSpacing", "lineHeight", "marginBottom", "marginLeft", "marginRight", "marginTop", "outlineWidth", "overflow", "overflowX", "overflowY", "paddingBottom", "paddingLeft", "paddingRight", "paddingTop", "textAlign", "textOverflow", "textTransform", "whiteSpace", "wordBreak", "wordWrap"];
+
+            function Mirror($inputor) {
+                this.$inputor = $inputor;
+            }
+            Mirror.prototype.mirrorCss = function () {
+                var css,
+                    _this = this;
+                css = {
+                    position: 'absolute',
+                    left: -9999,
+                    top: 0,
+                    zIndex: -20000
+                };
+                if (this.$inputor[0].tagName == 'TEXTAREA') {
+                    this.css_attr.push('width');
+                }
+                for (let p of this.css_attr)
+                    css[p] = _this.$inputor.css(p);
+                css["position"] = "relative";
+                css["display"] = "block";
+                return css;
+            };
+            Mirror.prototype.create = function (html) {
+                this.$mirror = this.$inputor.afterHTML("<div></div>");
+                this.$mirror.css(this.mirrorCss());
+                this.$mirror.html(html);
+                return this;
+            };
+            Mirror.prototype.rect = function () {
+                var $flag, pos, rect;
+                $flag = this.$mirror.find("#caret");
+                pos = $flag.position();
+                rect = {
+                    left: pos.left,
+                    top: pos.top,
+                    height: this.$mirror.find("#caret_h").height()
+                };
+                this.$mirror.remove();
+                return rect;
+            };
+            return Mirror;
+
+        })();
+        Utils = {
+            contentEditable: function ($inputor) {
+                return !!($inputor[0].contentEditable && $inputor[0].contentEditable === 'true');
+            }
+        };
+        methods = {
+            pos: function (pos) {
+                if (pos || pos === 0) {
+                    return this.setPos(pos);
+                } else {
+                    return this.getPos();
+                }
+            },
+            position: function (pos) {
+                if (oDocument.selection) {
+                    return this.getIEPosition(pos);
+                } else {
+                    return this.getPosition(pos);
+                }
+            },
+            offset: function (pos) {
+                var offset;
+                offset = this.getOffset(pos);
+                return offset;
+            }
+        };
+        oDocument = null;
+        oWindow = null;
+        oFrame = null;
+        setContextBy = function (settings) {
+            var iframe;
+            if (iframe = settings != null ? settings.iframe : void 0) {
+                oFrame = iframe;
+                oWindow = iframe.contentWindow;
+                return oDocument = iframe.contentDocument || oWindow.document;
+            } else {
+                oFrame = void 0;
+                oWindow = window;
+                return oDocument = document;
+            }
+        };
+        discoveryIframeOf = function ($dom) {
+            var error;
+            oDocument = $dom[0].ownerDocument;
+            oWindow = oDocument.defaultView || oDocument.parentWindow;
+            try {
+                return oFrame = oWindow.frameElement;
+            } catch (_error) {
+                error = _error;
+            }
+        };
+        let lf = लिपिquery.prototype;
+        lf.caret = function (method, value, settings) {
+            var caret;
+            if (methods[method]) {
+                if ($lf.isPlainObject(value)) {
+                    setContextBy(value);
+                    value = void 0;
+                } else {
+                    setContextBy(settings);
+                }
+                caret = Utils.contentEditable(this) ? new EditableCaret(this) : new InputCaret(this);
+                return methods[method].apply(caret, [value]);
+            }
+        };
+        lf.caret.EditableCaret = EditableCaret;
+        lf.caret.InputCaret = InputCaret;
+        lf.caret.Utils = Utils;
+        lf.caret.apis = methods;
+    }));
+}
