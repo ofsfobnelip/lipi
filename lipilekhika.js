@@ -367,7 +367,7 @@ class लिपिutil {
                 xhr.setRequestHeader(x, op.headers[x]);
         xhr.send(data);
         let scs = function () {
-            if (xhr.status == 200) {
+            if (parseInt(xhr.status / 100) == 2) {
                 let v = xhr.response;
                 if (hdr("content-type") == "application/json" && xhr.responseType != "json")
                     v = JSON.parse(xhr.response);
@@ -417,6 +417,30 @@ class लिपिutil {
             return "";
         let r = s[s.length + l];
         return r;
+    }
+    time() {
+        let a = new Date();
+        return a.getTime() / 1000;
+    }
+    dict_rev(d) {
+        let res = {};
+        for (let x in d) {
+            res[d[x]] = x;
+        }
+        return res;
+    }
+    substring(val, from, to = null) {
+        if (to == null)
+            to = val.length;
+        if (to > 0)
+            return val.substring(from, to)
+        else if (to < 0)
+            return val.substring(from, val.length + to)
+    };
+    format(val, l) {
+        for (let x = 0; x < l.length; x++)
+            val = this.replace_all(val, `{${x}}`, l[x]);
+        return val;
     }
 }
 if ($l != undefined)
