@@ -346,13 +346,23 @@ class लिपिutil {
         return template.firstChild;
     }
     ajax(url, op = {}) {
-        let xhr = op.xhr || new XMLHttpRequest();
+        let xhr = new XMLHttpRequest();
+        if ("xhr" in op)
+            xhr = op.xhr();
         let _async = "async" in op ? op.async : true;
-        xhr.open(op.type || "GET", url, _async);
-        let data = op.data || null;
+        let typ = "type" in op ? op.type : "GET";
+        xhr.open(typ, url, _async);
+        let data = "data" in op ? op.data : null;
 
-        function hdr(k) {
-            return xhr.getResponseHeader(k).split(";")[0];
+        function hdr(k, sl = false) {
+            let vl = xhr.getResponseHeader(k);
+            if (vl != null && vl != undefined)
+                if (sl)
+                    return vl.split(";")[0];
+                else
+                    return vl;
+            else
+                return undefined;
         }
         if ("dataType" in op)
             xhr.responseType = op["dataType"];
@@ -369,7 +379,7 @@ class लिपिutil {
         let scs = function () {
             if (parseInt(xhr.status / 100) == 2) {
                 let v = xhr.response;
-                if (hdr("content-type") == "application/json" && xhr.responseType != "json")
+                if (hdr("content-type", true) == "application/json" && xhr.responseType != "json")
                     v = JSON.parse(xhr.response);
                 if ("success" in op)
                     op.success(v, xhr);
