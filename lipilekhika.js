@@ -132,7 +132,6 @@ class लिपिलेखिकासहायक {
         return res;
     }
 }
-let लिपि = new लिपिलेखिकासहायक();
 class लिपिलेखिकापरिवर्तक {
     constructor() {
         this.k = लिपि;
@@ -1821,6 +1820,7 @@ var $l = function (sel) {
 if ($lf != undefined)
     $lf = undefined;
 var $lf = new लिपिutil();
+let लिपि = new लिपिलेखिकासहायक();
 let LipiLekhikA = new लिपिलेखिकापरिवर्तक();
 लिपि.k = LipiLekhikA;
 if (true) {
