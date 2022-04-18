@@ -101,8 +101,9 @@ class लिपिलेखिकासहायक {
         else
             return ln;
     }
-    load_lang(lang, callback = null, block = false) {
-        lang = this.normalize(lang);
+    load_lang(lang, callback = null, block = false, norm = true) {
+        if (norm)
+            lang = this.normalize(lang);
         if (!(lang in this.akSharAH)) {
             return $lf.get(this.sanchit + `/${lang}.json`, {
                 'async': !block,
@@ -755,9 +756,11 @@ class लिपिलेखिकापरिवर्तक {
             this.hide();
         }
     };
-    parivartak(val, from, to, html = false) {
-        from = this.k.normalize(from);
-        to = this.k.normalize(to);
+    parivartak(val, from, to, html = false, norm = true) {
+        if (norm) {
+            from = this.k.normalize(from);
+            to = this.k.normalize(to);
+        }
         if (from == to)
             return val;
         var l = लिपि;
