@@ -1763,11 +1763,15 @@ class लिपिutil {
         op.type = "POST";
         return this.ajax(url, op);
     }
-    getScript(url) {
+    getScript(url, call = null) {
         let e = document.createElement("script");
         e.src = url;
         $l("body")[0].appendChild(e)
-        e.remove();
+        e.onload = () => {
+            e.remove();
+            if (call != null)
+                call();
+        };
     }
     isPlainObject(o) {
         return typeof (o) == 'object' && o.constructor == Object;
