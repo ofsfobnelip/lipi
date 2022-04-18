@@ -10,6 +10,72 @@ class लिपिलेखिकासहायक {
         this.image_loca = this.substring(this.sanchit, 0, -12) + "img/lang";
         this.alph = ["ABCDEFGHIJKLMNOPQRSTUVWXYZ", "abcdefghijklmnopqrstuvwxyz"];
         this.lang_in = (x) => x in this.akSharAH;
+        this.langs = [
+            'Normal', 'Assamese',
+            'Bengali', 'Brahmi',
+            'Granth', 'Gujarati',
+            'Hindi', 'Kannada',
+            'Konkani', 'Malayalam',
+            'Marathi', 'Modi',
+            'Nepali', 'Oriya',
+            'Punjabi', 'Purna-Devanagari',
+            'Romanized', 'Sanskrit',
+            'Sharada', 'Siddham',
+            'Sinhala', 'Tamil-Extended',
+            'Tamil', 'Telugu',
+            'Urdu'
+        ];
+        this.alts = {
+            "en": 0,
+            "English": 0,
+            "as": 1,
+            "bn": 2,
+            "ben": 2,
+            "br": 3,
+            "gr": 4,
+            "gu": 5,
+            "guj": 5,
+            "hi": 6,
+            "hin": 6,
+            "kn": 7,
+            "kan": 7,
+            "ko": 8,
+            "kok": 8,
+            "ml": 9,
+            "mal": 9,
+            "mr": 10,
+            "mar": 10,
+            "mo": 11,
+            "mod": 11,
+            "ne": 12,
+            "nep": 12,
+            "Odia": 13,
+            "or": 13,
+            "pa": 14,
+            "pan": 14,
+            "pn": 14,
+            "pu-de": 15,
+            "pu-dev": 15,
+            "ro": 16,
+            "rom": 16,
+            "sa": 17,
+            "san": 17,
+            "dev": 17,
+            "Devanagari": 17,
+            "de": 17,
+            "sh": 18,
+            "shr": 18,
+            "sid": 19,
+            "si": 20,
+            "sin": 20,
+            "ta-ex": 21,
+            "tam-ex": 21,
+            "ta": 22,
+            "tam": 22,
+            "te": 23,
+            "tel": 23,
+            "ur": 24
+        };
         this.elms = [];
         this.pUrNasarve = this.alph[0] + this.alph[1] + "01234567890'$.#?";
         this.init = false;
@@ -22,8 +88,21 @@ class लिपिलेखिकासहायक {
         };
         this.is_mobile = mobile_check();
     }
+    normalize(ln) {
+        // function to normalize the names of scripts
+        let a = ln.split("-");
+        for (let x = 0; x < a.length; x++)
+            a[x] = a[x].charAt(0).toUpperCase() + a[x].substring(1);
+        let ln1 = a.join("-");
+        if (this.in(this.langs, ln1))
+            return ln1;
+        else if (ln in this.alts)
+            return this.langs[this.alts[ln]];
+        else
+            return ln;
+    }
     load_lang(lang, callback = null, block = false) {
-        lang = lang == "Devanagari" ? "Sanskrit" : lang;
+        lang = this.normalize(lang);
         if (!(lang in this.akSharAH)) {
             return $lf.get(this.sanchit + `/${lang}.json`, {
                 'async': !block,
@@ -38,8 +117,8 @@ class लिपिलेखिकासहायक {
         } else if (callback != null)
             callback();
         return new Promise(r => r("loaded"));
-    } in (val, in_what) {
-        return val.indexOf(in_what) != -1;
+    } in (in_what, what) {
+        return in_what.indexOf(what) != -1;
     }
     reg_index(str, pattern) {
         let ind = [],
@@ -186,6 +265,9 @@ class लिपिलेखिकापरिवर्तक {
             if (!elf)
                 this.clear_all_val(true);
             let lng = elmt.attr("lipi-lang") == undefined ? this.script : elmt.attr("lipi-lang");
+            lng = this.k.normalize(lng);
+            if (!this.k.in(this.k.langs, lng))
+                return "error";
             this.prakriyA({
                 text: e,
                 typing: 1,
@@ -674,10 +756,8 @@ class लिपिलेखिकापरिवर्तक {
         }
     };
     parivartak(val, from, to, html = false) {
-        if (from == "Devanagari")
-            from = "Sanskrit";
-        if (to == "Devanagari")
-            to = "Sanskrit";
+        from = this.k.normalize(from);
+        to = this.k.normalize(to);
         if (from == to)
             return val;
         var l = लिपि;
@@ -921,8 +1001,11 @@ var lipi_lekhika = function (time = 60) {
             e.on("keydown", function (ev) {
                 m.clear(ev);
             });
-            if (e.attr("lipi-lang") != undefined)
-                m.load_lang(e.attr("lipi-lang"))
+            if (e.attr("lipi-lang") != undefined) {
+                let lng = m.normalize(e.attr("lipi-lang"));
+                if (m.in(m.langs, lng))
+                    m.load_lang(lng);
+            }
         };
     }
     mn();
@@ -932,7 +1015,7 @@ var lipi_lekhika = function (time = 60) {
     return k;
 };
 var load_lekhika_lang = (lang, call = null) => {
-    LipiLekhikA.k.load_lang(lang, call);
+    return LipiLekhikA.k.load_lang(lang, call);
 };
 var lekhika_convert = (text, from, to) => {
     return LipiLekhikA.parivartak(text, from, to);
@@ -1125,6 +1208,9 @@ class लिपिलेखिकालेखनसहायिका {
                         if (this.k.in(["input", "textarea"], el[0].tagName.toLowerCase())) {
                             obj.from_click = true;
                             let lng = el.attr("lipi-lang") == undefined ? this.k.k.script : el.attr("lipi-lang");
+                            lng = this.k.normalize(lng);
+                            if (!this.k.in(this.k.langs, lng))
+                                return "error";
                             obj.prakriyA({
                                 text: x,
                                 typing: 1,
@@ -1246,8 +1332,6 @@ class लिपिलेखिकालेखनसहायिका {
             let k12 = this.pUrvavarNa[0][0] + b[key][1];
             if (l.last(this.pUrvavarNa[0]) == 3 && key != "a")
                 k12 = l.substring(k12, 0, -2) + l.last(k12) + l.last(k12, -2);
-            else if (l.last(this.pUrvavarNa[0]) == 3 && key == "a")
-                k12 = l.last(k12, 0, -1) + l.last(k12);
             this.set_labels(4, this.pUrvavarNa[1] + key);
             this.set_labels(5, k12);
         } else {
