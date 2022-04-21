@@ -1834,12 +1834,14 @@ class लिपिutil {
                 return null;
             }
         }
-        if (_async)
-            return new Promise(rs => {
+        if (_async) {
+            let pr = new Promise(rs => {
                 xhr.onerror = () => rs("Network Error");
                 xhr.onload = () => rs(scs());
             });
-        else
+            pr.xhr = xhr;
+            return pr;
+        } else
             return scs();
     }
     get(url, op = {}) {
