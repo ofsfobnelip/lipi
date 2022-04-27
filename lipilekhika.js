@@ -56,6 +56,7 @@ class लिपिलेखिकासहायक {
             "pn": 14,
             "pu-de": 15,
             "pu-dev": 15,
+            "pur-dev": 15,
             "ro": 16,
             "rom": 16,
             "sa": 17,
@@ -1823,10 +1824,11 @@ class लिपिutil {
         let scs = function () {
             if (parseInt(xhr.status / 100) == 2) {
                 let v = xhr.response;
-                if (hdr("content-type", true) == "application/json" && xhr.responseType != "json")
+                let type = hdr("content-type", true);
+                if (type == "application/json" && xhr.responseType != "json")
                     v = JSON.parse(xhr.response);
                 if ("success" in op)
-                    op.success(v, xhr);
+                    op.success(v, xhr, type);
                 return v;
             } else {
                 if ("error" in op)
