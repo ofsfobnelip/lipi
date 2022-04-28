@@ -1631,31 +1631,32 @@ class लिपिquery {
         }
     }
     show() {
-        let arg = arguments;
         let lst = {
             div: "block",
             span: "inline"
         }
         for (let x of this.elm) {
             let e = $l(x);
-            e.removeCss("display");
             if (e.css("display") == "none") {
-                let nm = x.tagName.toLowerCase();
-                if (nm in lst) {
-                    e.css("display", lst[nm]);
-                } else {
-                    let el = $l("body").appendHTML(`<${nm}></${nm}>`);
-                    e.css("display", el.css("display"));
-                    el.remove();
+                e.removeCss("display");
+                if (e.css("display") == "none") {
+                    let nm = x.tagName.toLowerCase();
+                    if (nm in lst) {
+                        e.css("display", lst[nm]);
+                    } else {
+                        let el = $l("body").appendHTML(`<${nm}></${nm}>`);
+                        e.css("display", el.css("display"));
+                        el.remove();
+                    }
                 }
             }
         }
         return this;
     }
     hide() {
-        let arg = arguments;
         for (let x of this.elm)
-            x.style.display = "none";
+            if (getComputedStyle[x].display != "none")
+                x.style.display = "none";
         return this;
     }
     children() {
@@ -1832,7 +1833,7 @@ class लिपिutil {
                 return v;
             } else {
                 if ("error" in op)
-                    op.error(xhr);
+                    op.error(xhr, type);
                 return null;
             }
         }
