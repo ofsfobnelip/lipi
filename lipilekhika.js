@@ -30,6 +30,7 @@ class लिपिलेखिकासहायक {
             "English": 0,
             "as": 1,
             "bn": 2,
+            "Bangla": 2,
             "ben": 2,
             "br": 3,
             "gr": 4,
@@ -54,6 +55,8 @@ class लिपिलेखिकासहायक {
             "pa": 14,
             "pan": 14,
             "pn": 14,
+            "Gurumukhi": 14,
+            "guru": 14,
             "pu-de": 15,
             "pu-dev": 15,
             "pur-dev": 15,
@@ -1604,8 +1607,13 @@ class लिपिquery {
                 for (let x of this.elm)
                     Object.assign(x.style, arg[0]);
                 return this;
-            } else
-                return getComputedStyle(this[0])[arg[0]];
+            } else {
+                let vl = getComputedStyle(this[0]);
+                if (vl != undefined && vl != null)
+                    return vl[arg[0]]
+                else
+                    return "";
+            }
         else if (arg.length == 2) {
             for (let x of this.elm)
                 x.style[arg[0]] = arg[1];
@@ -1655,7 +1663,7 @@ class लिपिquery {
     }
     hide() {
         for (let x of this.elm)
-            if (getComputedStyle[x].display != "none")
+            if ($l(x).css("display") != "none")
                 x.style.display = "none";
         return this;
     }
