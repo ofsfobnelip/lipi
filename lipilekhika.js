@@ -1831,9 +1831,9 @@ class लिपिutil {
                 xhr.setRequestHeader(x, op.headers[x]);
         xhr.send(data);
         let scs = function () {
+            let type = hdr("content-type", true);
             if (parseInt(xhr.status / 100) == 2) {
                 let v = xhr.response;
-                let type = hdr("content-type", true);
                 if (type == "application/json" && xhr.responseType != "json")
                     v = JSON.parse(xhr.response);
                 if ("success" in op)
