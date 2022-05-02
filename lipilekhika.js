@@ -1668,7 +1668,6 @@ class लिपिquery {
         return this;
     }
     children() {
-        let arg = arguments;
         let ch = [];
         for (let x of this.elm) {
             for (let y of x.children)
@@ -1677,9 +1676,9 @@ class लिपिquery {
         return ch;
     }
     remove() {
-        let arg = arguments;
         for (let x of this.elm)
             x.remove();
+        return this;
     }
     find() {
         let arg = arguments;
@@ -1752,7 +1751,6 @@ class लिपिquery {
         return this[0].scrollLeft;
     }
     scrollTop() {
-        let arg = arguments;
         if (this.length == 0)
             return 0;
         return this[0].scrollTop;
@@ -1837,11 +1835,11 @@ class लिपिutil {
                 if (type == "application/json" && xhr.responseType != "json")
                     v = JSON.parse(xhr.response);
                 if ("success" in op)
-                    op.success(v, xhr, type);
+                    op.success(v, xhr, xhr.status, type);
                 return v;
             } else {
                 if ("error" in op)
-                    op.error(xhr, type);
+                    op.error(xhr, xhr.status, type);
                 return null;
             }
         }
@@ -1912,6 +1910,69 @@ class लिपिutil {
         for (let x = 0; x < l.length; x++)
             val = this.replace_all(val, `{${x}}`, l[x]);
         return val;
+    }
+    json_to_address(v) {
+        if (v == null | v == undefined)
+            return []
+        let r = [];
+
+        function jsn(n, pr = "") {
+            for (let x in n) {
+                let tp = typeof (n[x])
+                let v1 = `${pr}/${x}`
+                if (Array.isArray(x))
+                    lst(n[x], v1)
+                else if (tp == "object")
+                    jsn(n[x], v1)
+                else
+                    r.push(`${pr}/${x}`)
+            }
+        }
+
+        function lst(n, pr = "") {
+            for (let x = 0; x < n.length; x++) {
+                let tp = typeof (n[x])
+                let v1 = `${pr}/${x}`
+                if (Array.isArray(x))
+                    lst(n[x], v1)
+                else if (tp == "object")
+                    jsn(n[x], v1)
+                else
+                    r.push(`${pr}/${x}`)
+            }
+        }
+        if (typeof (v) == "object")
+            v = jsn(v)
+        else if (Array.isArray(v))
+            v = lst(v)
+        return r
+    }
+    val_from_adress(lc, vl) {
+        let n = vl;
+        lc = lc.substring(1).split("/")
+        for (let x of lc) {
+            let t = x;
+            if (Array.isArray(n))
+                t = parseInt(t)
+            n = n[t]
+        }
+        return n;
+    }
+    set_val_from_adress(lc, vl, val) {
+        let n = vl;
+        lc = lc.substring(1).split("/")
+        let ln = lc.length;
+        for (let i = 0; i < ln; i++) {
+            x = lc[i]
+            let t = x;
+            if (Array.isArray(n))
+                t = parseInt(t)
+            if (i == ln - 1)
+                n[t] = val
+            else
+                n = n[t]
+        }
+        return vl;
     }
 }
 if ($l != undefined)
