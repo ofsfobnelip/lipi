@@ -1839,7 +1839,7 @@ class लिपिutil {
                 return v;
             } else {
                 if ("error" in op)
-                    op.error(xhr, xhr.status, type);
+                    op.error(v, xhr, xhr.status, type);
                 return null;
             }
         }
@@ -1916,30 +1916,25 @@ class लिपिutil {
             return []
         let r = [];
 
+        function prcs(x, n, pr) {
+            let tp = typeof (n[x])
+            let v1 = `${pr}/${x}`
+            if (Array.isArray(x))
+                lst(n[x], v1)
+            else if (tp == "object")
+                jsn(n[x], v1)
+            else
+                r.push(`${pr}/${x}`)
+        }
+
         function jsn(n, pr = "") {
-            for (let x in n) {
-                let tp = typeof (n[x])
-                let v1 = `${pr}/${x}`
-                if (Array.isArray(x))
-                    lst(n[x], v1)
-                else if (tp == "object")
-                    jsn(n[x], v1)
-                else
-                    r.push(`${pr}/${x}`)
-            }
+            for (let x in n)
+                prcs(x, n, pr)
         }
 
         function lst(n, pr = "") {
-            for (let x = 0; x < n.length; x++) {
-                let tp = typeof (n[x])
-                let v1 = `${pr}/${x}`
-                if (Array.isArray(x))
-                    lst(n[x], v1)
-                else if (tp == "object")
-                    jsn(n[x], v1)
-                else
-                    r.push(`${pr}/${x}`)
-            }
+            for (let x = 0; x < n.length; x++)
+                prcs(x, n, pr)
         }
         if (typeof (v) == "object")
             v = jsn(v)
@@ -1949,6 +1944,8 @@ class लिपिutil {
     }
     val_from_adress(lc, vl) {
         let n = vl;
+        if (lc == "/")
+            return n
         lc = lc.substring(1).split("/")
         for (let x of lc) {
             let t = x;
@@ -1958,19 +1955,22 @@ class लिपिutil {
         }
         return n;
     }
-    set_val_from_adress(lc, vl, val) {
+    set_val_from_adress(lc, vl, val = null, make = false) {
         let n = vl;
         lc = lc.substring(1).split("/")
         let ln = lc.length;
         for (let i = 0; i < ln; i++) {
-            x = lc[i]
+            let x = lc[i]
             let t = x;
             if (Array.isArray(n))
                 t = parseInt(t)
             if (i == ln - 1)
                 n[t] = val
-            else
+            else {
+                if (!(t in n) && make)
+                    n[t] = {}
                 n = n[t]
+            }
         }
         return vl;
     }
