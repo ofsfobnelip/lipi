@@ -1830,18 +1830,15 @@ class लिपिutil {
         xhr.send(data);
         let scs = function () {
             let type = hdr("content-type", true);
+            let v = xhr.response;
             if (parseInt(xhr.status / 100) == 2) {
-                let v = xhr.response;
                 if (type == "application/json" && xhr.responseType != "json")
-                    v = JSON.parse(xhr.response);
+                    v = JSON.parse(v);
                 if ("success" in op)
                     op.success(v, xhr, xhr.status, type);
-                return v;
-            } else {
-                if ("error" in op)
-                    op.error(v, xhr, xhr.status, type);
-                return null;
-            }
+            } else if ("error" in op)
+                op.error(v, xhr, xhr.status, type);
+            return v;
         }
         if (_async) {
             let pr = new Promise(rs => {
