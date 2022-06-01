@@ -23,7 +23,8 @@ class लिपिलेखिकासहायक {
             'Sharada', 'Siddham',
             'Sinhala', 'Tamil-Extended',
             'Tamil', 'Telugu',
-            'Urdu'
+            'Urdu', 'Kashmiri',
+            'Sindhi'
         ];
         this.alts = {
             "en": 0,
@@ -236,9 +237,7 @@ class लिपिलेखिकापरिवर्तक {
         this.last_of_3_status_for_mAtrA = false;
         this.special_ved_s = false;
         this.usage_table_link = (lang) => {
-            let y = lang;
-            y = लिपि.in(["Devanagari", "Marathi", "Konkani", "Sanskrit", "Nepali"], y) ? "Hindi" : y;
-            return `${लिपि.image_loca}/${y}.png`;
+            return `${लिपि.image_loca}/${this.k.normalize(lang)}.png`;
         };
         this.pUrva_lekhit = [
             ["", -1],
