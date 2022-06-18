@@ -1899,7 +1899,7 @@ let $l = function (sel) {
     return el;
 }
 let $lf = new लिपिutil();
-lipi_lekhika();
+setTimeout(() => lipi_lekhika(), 0)
 if (true) {
     // https://github.com/abhas9/vanilla-caret-js
     (function (factory) {
