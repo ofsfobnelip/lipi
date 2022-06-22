@@ -892,13 +892,13 @@ var lipi_lekhika = function (time = 30) {
     function check_elements() {
         let elm = $l(".Lipi-LekhikA");
         let lek = ["lipi-lekhika", "lekhan-sahayika"];
-        m.elms = [];
+        let elmts = [];
         for (let x of elm.elm) {
             let e = $l(x);
-            if (m.elms.indexOf(x) != -1)
+            if (!m.in(["textarea", "input"], x.tagName.toLowerCase()))
                 continue;
-            m.elms.push(x);
-            if (!m.in(["span", "div", "textarea", "input"], x.tagName.toLowerCase()))
+            elmts.push(x);
+            if (m.elms.indexOf(x) != -1)
                 continue;
             for (let v of lek) {
                 if (e.attr(v) == undefined)
@@ -921,6 +921,7 @@ var lipi_lekhika = function (time = 30) {
                     m.load_lang(lng);
             }
         };
+        m.elms = elmts;
     }
     check_elements();
     if (!k.init) {
