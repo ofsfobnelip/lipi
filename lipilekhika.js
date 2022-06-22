@@ -1355,7 +1355,7 @@ class लिपिलेखिकालेखनसहायिका {
             gh();
     };
 };
-if (true) {
+setTimeout(() => {// Tracking change in url if a single page app
     let lastUrl = location.href;
     new MutationObserver(() => {
         const url = location.href;
@@ -1364,10 +1364,7 @@ if (true) {
             lipi_lekhika();
         }
     }).observe(document, { subtree: true, childList: true });
-}
-let लिपि = new लिपिलेखिकासहायक();
-let LipiLekhikA = new लिपिलेखिकापरिवर्तक();
-लिपि.k = LipiLekhikA;
+},  600);
 class लिपिquery {
     constructor(sel) {
         this.sel = sel;
@@ -1899,6 +1896,9 @@ let $l = function (sel) {
     return el;
 }
 let $lf = new लिपिutil();
+let लिपि = new लिपिलेखिकासहायक();
+let LipiLekhikA = new लिपिलेखिकापरिवर्तक();
+लिपि.k = LipiLekhikA;
 setTimeout(() => lipi_lekhika(), 0)
 if (true) {
     // https://github.com/abhas9/vanilla-caret-js
