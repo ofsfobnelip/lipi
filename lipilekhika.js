@@ -892,12 +892,12 @@ var lipi_lekhika = function (time = 30) {
     function check_elements() {
         let elm = $l(".Lipi-LekhikA");
         let lek = ["lipi-lekhika", "lekhan-sahayika"];
+        m.elms = [];
         for (let x of elm.elm) {
             let e = $l(x);
             if (m.elms.indexOf(x) != -1)
                 continue;
-            else
-                m.elms.push(x);
+            m.elms.push(x);
             if (!m.in(["span", "div", "textarea", "input"], x.tagName.toLowerCase()))
                 continue;
             for (let v of lek) {
@@ -1355,7 +1355,7 @@ class लिपिलेखिकालेखनसहायिका {
             gh();
     };
 };
-setTimeout(() => {// Tracking change in url if a single page app
+setTimeout(() => { // Tracking change in url if a single page app
     let lastUrl = location.href;
     new MutationObserver(() => {
         const url = location.href;
@@ -1364,7 +1364,7 @@ setTimeout(() => {// Tracking change in url if a single page app
             lipi_lekhika();
         }
     }).observe(document, { subtree: true, childList: true });
-},  600);
+}, 600);
 class लिपिquery {
     constructor(sel) {
         this.sel = sel;
